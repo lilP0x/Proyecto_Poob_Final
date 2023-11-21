@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import domain.GomokuPOOS;
-
+import javax.swing.JLabel;
 
 public class GomokuPOOSGUI extends JFrame{
 	GomokuPOOS juego ;
@@ -39,6 +39,13 @@ public class GomokuPOOSGUI extends JFrame{
         
         Image imagePanelInicial = new ImageIcon("/recursos/GOMOKU-Diseño_page-0001.JPG").getImage();
         //imagePanelInicial.setLayout(new BorderLayout()); // Utilizar BorderLayout para superponer componentes
+        // Agregar JLabel u otros componentes al JPanel con imagen de fondo
+        JLabel label1 = new JLabel("Label 1");
+        JLabel label2 = new JLabel("Label 2");
+
+        // Ajustar el diseño según tus necesidades
+        imagePanelInicial.add(label1, BorderLayout.NORTH);
+        imagePanelInicial.add(label2, BorderLayout.SOUTH);
 
 	} 
     private void prepareActions() {}

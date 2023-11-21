@@ -1,9 +1,15 @@
 package domain;
 
-public class Player{
+import java.awt.*;
 
-	public Player(){
-	
+public abstract class Player{
+	private String name;
+	private Color color;
+	private boolean turn;
+
+	public Player(String name,Color color){
+		this.name = name;
+		this.color = color; 
 	}
 
 
