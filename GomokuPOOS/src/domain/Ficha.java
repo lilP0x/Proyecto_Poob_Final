@@ -1,7 +1,7 @@
 
 package domain;
 
-public class Ficha {
+public abstract class Ficha {
 
 	public Ficha(){
 
