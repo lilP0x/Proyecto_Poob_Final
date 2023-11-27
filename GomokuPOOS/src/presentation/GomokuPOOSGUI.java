@@ -1,53 +1,113 @@
 package presentation;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+public class GomokuPOOSGUI extends JFrame {
 
-import domain.GomokuPOOS;
-import javax.swing.JLabel;
+    private JLayeredPane pantallaInicial;
+    private JButton inicio;
+    private JLayeredPane pantallaModoJuego;
+    public GomokuPOOSGUI() {
+        prepareElements();
+        pantallaInicial();
+        prepareActions();
+    }
 
-public class GomokuPOOSGUI extends JFrame{
-	GomokuPOOS juego ;
-	
-	public GomokuPOOSGUI(){
-		juego = new GomokuPOOS();
-		prepareElements();
-		prepareActions();
-	}
-		
-	public static void main(String [] args){
-		GomokuPOOSGUI gomoku = new GomokuPOOSGUI(); 
-        gomoku.setVisible(true);
-	}
-	    
-
-	    
-	private void prepareElements() {
+    private void prepareElements() {
         setTitle("GomokuPOOS");
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(new Dimension(dimension.width / 2, dimension.height / 2));
         setLocationRelativeTo(null);
+        pantallaInicial();
+    }
+
+    public static void main(String[] args) {
         
-        //panel de inicio
-        
-        Image imagePanelInicial = new ImageIcon("/recursos/GOMOKU-Diseño_page-0001.JPG").getImage();
-        //imagePanelInicial.setLayout(new BorderLayout()); // Utilizar BorderLayout para superponer componentes
-        // Agregar JLabel u otros componentes al JPanel con imagen de fondo
-        JLabel label1 = new JLabel("Label 1");
-        JLabel label2 = new JLabel("Label 2");
+            GomokuPOOSGUI gomoku = new GomokuPOOSGUI();
+            gomoku.setVisible(true);
+    }
+    
 
-        // Ajustar el diseño según tus necesidades
-        imagePanelInicial.add(label1, BorderLayout.NORTH);
-        imagePanelInicial.add(label2, BorderLayout.SOUTH);
+    private void pantallaInicial() {
+        if (pantallaInicial != null) {
+            pantallaInicial.removeAll();
+        } else {
+            pantallaInicial = new JLayeredPane();
+            getContentPane().add(pantallaInicial);
+        }
+        JLabel label = new JLabel();
+        File archivoImagen = new File("src/recursos/GOMOKU-Diseno_page-0001.jpg");
+        String rutaCompleta = archivoImagen.getAbsolutePath();
+        System.out.println(rutaCompleta);
+        System.out.println("C:\\Users\\juanp\\OneDrive\\Escritorio\\Universidad\\POOB\\Proyecto Final\\GomokuPOOS\\src\\recursos");
+        ImageIcon imagenIcono = new ImageIcon(rutaCompleta);
+        Image imagenEscalada = imagenIcono.getImage().getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
+        ImageIcon imagenEscaladaIcono = new ImageIcon(imagenEscalada);
+        label.setIcon(imagenEscaladaIcono);
+        label.setBounds(0, 0, getWidth(), getHeight());
+        JPanel firstLayer = new JPanel();
+        firstLayer.add(label);
 
-	} 
-    private void prepareActions() {}
+        inicio = new JButton("Inicio");
+        JButton continuar = new JButton("Continuar");
+        inicio.setBackground(Color.BLACK);
+   
+        inicio.setPreferredSize(new Dimension((getWidth() / 2)-(getWidth() / 15), getHeight() / 6));
+        continuar.setPreferredSize(new Dimension((getWidth() / 2)-(getWidth() / 15), getHeight() / 6));
+        JPanel botones = new JPanel();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(10, 20, 0, 20); 
+        botones.add(inicio, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        JLabel labels = new JLabel();
+        labels.setPreferredSize(new Dimension( getWidth(),getHeight()/20));
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        botones.add(labels, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.insets = new Insets(1000000 , 20, 0, 20); 
+        botones.add(continuar, gbc);
+        botones.setBackground(new Color(155,155,155,0));
+        //inicio.setVisible(false);
+        continuar.setVisible(false);
 
+        pantallaInicial = new JLayeredPane();
+        pantallaInicial.setLayout(null);  
+        firstLayer.setBounds(0, 0, getWidth(), getHeight());
+        pantallaInicial.add(firstLayer, Integer.valueOf(1));
+        botones.setBounds(0, getHeight() / 2 + getHeight() / 16, getWidth(), getHeight() / 2);
+        pantallaInicial.add(botones, Integer.valueOf(2));
+
+        add(pantallaInicial);
+    }
+    private void prepareActions(){
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                actualizarDimensiones();
+            }
+        });
+        ActionListener oyenteDeInicio;
+        oyenteDeInicio = new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                getContentPane().removeAll();
+                getContentPane().add(pantallaModoJuego);
+                revalidate();
+                repaint();
+            }
+        };
+        inicio.addActionListener(oyenteDeInicio);
+    }
+    private void actualizarDimensiones() {
+        pantallaInicial();
+        revalidate();
+        repaint();
+    }
 }

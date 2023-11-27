@@ -11,9 +11,9 @@ public class GomokuPOOS {
 	private int turn;
 	
 
-	public GomokuPOOS(String nameP1,Color colorP1, String nameP2,Color colorP2,String modoJuego,int size,String type){
-	tablero = new Board(nameP1,colorP1,nameP2,colorP2,size);	
-	addPlayers(nameP1,colorP1,nameP2,colorP2,type);
+	public GomokuPOOS(String nameP1,Color colorP1, String nameP2,Color colorP2,String modoJuego,int size,String type1,String type2){
+	tablero = new Board(size);	
+	addPlayers(nameP1,colorP1,nameP2,colorP2,type1,type2);
 	turn = 1;	
 	}
 
@@ -29,12 +29,15 @@ public class GomokuPOOS {
 		
 	}
 	
-	private void addPlayers(String nameP1,Color colorP1,String nameP2,Color colorP2,String type){
+	
+	private void addPlayers(String nameP1,Color colorP1,String nameP2,Color colorP2,String type1, String type2){
 		try {
-            Class<? extends Player> playerClass = Class.forName(type).asSubclass(Player.class);
-            Constructor<? extends Player> constructor = playerClass.getConstructor(String.class, int[][].class);
-            player1 = constructor.newInstance(nameP1,colorP1);
-            player2 = constructor.newInstance(nameP2,colorP2);
+            Class<? extends Player> playerClass1 = Class.forName(type1).asSubclass(Player.class);
+            Constructor<? extends Player> constructor = playerClass1.getConstructor(String.class, int[][].class);
+            Class<? extends Player> playerClass2 = Class.forName(type2).asSubclass(Player.class);
+            Constructor<? extends Player> constructor1 = playerClass2.getConstructor(String.class, int[][].class);
+            player1 = constructor.newInstance(nameP1,colorP1,tablero);
+            player2 = constructor1.newInstance(nameP2,colorP2,tablero);
         } catch (Exception e) {
         }
 		

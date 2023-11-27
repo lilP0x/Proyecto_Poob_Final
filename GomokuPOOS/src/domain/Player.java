@@ -22,7 +22,10 @@ public abstract class Player{
             Constructor<? extends Ficha> constructor = fichaClass.getConstructor(String.class, int[][].class);
             Ficha ficha = constructor.newInstance(color);
     		tablero.play(row,column,ficha);
+    		
         } catch (Exception e) {
+        	
+        	
         }
 		
 		

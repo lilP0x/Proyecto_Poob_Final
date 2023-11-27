@@ -4,8 +4,8 @@ import java.awt.Color;
 
 public class Machine extends Player {
 
-	public Machine(String name, Color color) {
-		super(name, color);
+	public Machine(String name, Color color,Board tablero) {
+		super(name, color,tablero);
 		
 	}
 

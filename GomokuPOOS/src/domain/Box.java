@@ -1,5 +1,7 @@
 package domain;
 
+import java.lang.reflect.Constructor;
+
 public class Box {
 	private Ficha ficha;
 	
@@ -7,14 +9,11 @@ public class Box {
 
 	}
 
-	public void play(String type) {
-		
+	public void play(Ficha ficha) {
 		if(ficha.equals(null)) {
-			//ficha = new FIcha();
-			
+			this.ficha = ficha;
 		}
 		
 	}
-		//codigo que obtine las clases y crea un objeto basandose en eso
 		
 }
