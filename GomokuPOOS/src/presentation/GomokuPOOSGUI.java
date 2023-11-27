@@ -40,10 +40,8 @@ public class GomokuPOOSGUI extends JFrame {
             getContentPane().add(pantallaInicial);
         }
         JLabel label = new JLabel();
-        File archivoImagen = new File("src/recursos/GOMOKU-Diseno_page-0001.jpg");
+        File archivoImagen = new File("src/recursos/pantalla1.jpg");
         String rutaCompleta = archivoImagen.getAbsolutePath();
-        System.out.println(rutaCompleta);
-        System.out.println("C:\\Users\\juanp\\OneDrive\\Escritorio\\Universidad\\POOB\\Proyecto Final\\GomokuPOOS\\src\\recursos");
         ImageIcon imagenIcono = new ImageIcon(rutaCompleta);
         Image imagenEscalada = imagenIcono.getImage().getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
         ImageIcon imagenEscaladaIcono = new ImageIcon(imagenEscalada);
@@ -52,12 +50,17 @@ public class GomokuPOOSGUI extends JFrame {
         JPanel firstLayer = new JPanel();
         firstLayer.add(label);
 
-        inicio = new JButton("Inicio");
-        JButton continuar = new JButton("Continuar");
-        inicio.setBackground(Color.BLACK);
+        inicio = new JButton();
+        JButton continuar = new JButton();
+        File rutaBotonI = new File("src/recursos/boton inicio.jpg");
+        String rutabotonI = rutaBotonI.getAbsolutePath();
+        ImageIcon imagenBotonI = new ImageIcon(rutabotonI);
+        Image imagenEscaladaBOTONI = imagenBotonI.getImage().getScaledInstance((getWidth() / 2)-(getWidth() / 10),getHeight() / 6, Image.SCALE_SMOOTH);
+        ImageIcon iniciB= new ImageIcon(imagenEscaladaBOTONI);
+        inicio.setIcon(iniciB);
    
-        inicio.setPreferredSize(new Dimension((getWidth() / 2)-(getWidth() / 15), getHeight() / 6));
-        continuar.setPreferredSize(new Dimension((getWidth() / 2)-(getWidth() / 15), getHeight() / 6));
+        inicio.setPreferredSize(new Dimension((getWidth() / 2)-(getWidth() / 10), getHeight() / 6));
+        continuar.setPreferredSize(new Dimension((getWidth() / 2)-(getWidth() / 10), getHeight() / 6));
         JPanel botones = new JPanel();
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -76,8 +79,7 @@ public class GomokuPOOSGUI extends JFrame {
         gbc.insets = new Insets(1000000 , 20, 0, 20); 
         botones.add(continuar, gbc);
         botones.setBackground(new Color(155,155,155,0));
-        //inicio.setVisible(false);
-        continuar.setVisible(false);
+       
 
         pantallaInicial = new JLayeredPane();
         pantallaInicial.setLayout(null);  
@@ -87,6 +89,10 @@ public class GomokuPOOSGUI extends JFrame {
         pantallaInicial.add(botones, Integer.valueOf(2));
 
         add(pantallaInicial);
+    }
+    
+    private void preparePantallaSeleccionModoJuego() {
+    	
     }
     private void prepareActions(){
         addComponentListener(new java.awt.event.ComponentAdapter() {
