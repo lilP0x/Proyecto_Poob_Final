@@ -1,9 +1,11 @@
 package domain;
 
+import java.awt.Color;
+
 public class NormalFicha extends Ficha {
 	
-	public NormalFicha() {
-		
+	public NormalFicha(Color color) {
+		super(color);
 		
 	}
 	

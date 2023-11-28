@@ -2,13 +2,14 @@ package domain;
 
 import java.awt.*;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public abstract class Player{
-	private String name;
-	private Color color;
-	private Board tablero;
-	private ArrayList<Ficha> fichas = new ArrayList<>();  
+	protected String name;
+	protected Color color;
+	protected Board tablero;
+	protected ArrayList<Ficha> fichas = new ArrayList<>();  
 
 	public Player(String name,Color color, Board tablero){
 		this.name = name;
@@ -16,20 +17,15 @@ public abstract class Player{
 		this.tablero = tablero;
 	}
 	
-	public void play(int row,int column,String type){
-		try {
-            Class<? extends Ficha> fichaClass = Class.forName(type).asSubclass(Ficha.class);
-            Constructor<? extends Ficha> constructor = fichaClass.getConstructor(String.class, int[][].class);
-            Ficha ficha = constructor.newInstance(color);
-    		tablero.play(row,column,ficha);
-    		
-        } catch (Exception e) {
-        	
-        	
-        }
-		
-		
+	public abstract void play(int row,int column,String type) throws GomokuPOOSException;
+	
+	
+	public String getName() {
+		return name;
 	}
 	
-
+	public Color getColor() {
+		return color;
+	}
 }
+

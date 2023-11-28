@@ -7,4 +7,12 @@ public class Golden extends Box{
 		
 	}
 
+	@Override
+	public void action() {
+		
+	}
+
+	
+	
+
 }

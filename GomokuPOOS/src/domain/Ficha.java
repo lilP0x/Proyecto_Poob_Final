@@ -1,10 +1,13 @@
 
 package domain;
 
+import java.awt.Color;
+
 public abstract class Ficha {
-
-	public Ficha(){
-
+	protected Color color;
+	
+	public Ficha(Color color){
+		this.color = color;
 
 	}
 

@@ -42,8 +42,8 @@ public class GomokuPOOSGUI extends JFrame {
         JLabel label = new JLabel();
         File archivoImagen = new File("src/recursos/GOMOKU-Diseno_page-0001.jpg");
         String rutaCompleta = archivoImagen.getAbsolutePath();
-        System.out.println(rutaCompleta);
-        System.out.println("C:\\Users\\juanp\\OneDrive\\Escritorio\\Universidad\\POOB\\Proyecto Final\\GomokuPOOS\\src\\recursos");
+        //System.out.println(rutaCompleta);
+        //System.out.println("C:\\Users\\juanp\\OneDrive\\Escritorio\\Universidad\\POOB\\Proyecto Final\\GomokuPOOS\\src\\recursos");
         ImageIcon imagenIcono = new ImageIcon(rutaCompleta);
         Image imagenEscalada = imagenIcono.getImage().getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
         ImageIcon imagenEscaladaIcono = new ImageIcon(imagenEscalada);

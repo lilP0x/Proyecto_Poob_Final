@@ -18,7 +18,7 @@ public class GomokuPOOS {
 	}
 
 	
-	public void play(int row,int column,String type){
+	public void play(int row,int column,String type) throws GomokuPOOSException{
 		
 		if(turn % 2 == 0) {
 			player2.play(row,column,type);
@@ -29,18 +29,53 @@ public class GomokuPOOS {
 		
 	}
 	
-	
 	private void addPlayers(String nameP1,Color colorP1,String nameP2,Color colorP2,String type1, String type2){
-		try {
-            Class<? extends Player> playerClass1 = Class.forName(type1).asSubclass(Player.class);
-            Constructor<? extends Player> constructor = playerClass1.getConstructor(String.class, int[][].class);
-            Class<? extends Player> playerClass2 = Class.forName(type2).asSubclass(Player.class);
-            Constructor<? extends Player> constructor1 = playerClass2.getConstructor(String.class, int[][].class);
-            player1 = constructor.newInstance(nameP1,colorP1,tablero);
-            player2 = constructor1.newInstance(nameP2,colorP2,tablero);
-        } catch (Exception e) {
+           
+        if(type1.equals("Human")&& type2.equals("Human")) {
+        	
+        	player1 = new Human(nameP1, colorP1,tablero);
+        	player2 = new Human(nameP2,colorP2,tablero);
+        	
+        }else if(type1.equals("Human")&& type2.equals("Miedosa")) {
+        	
+        	player1 = new Human(nameP1, colorP1, tablero);
+        	player2 = new Fearful(nameP2, colorP2, tablero);
+        	
+        }else if(type1.equals("Human")&& type2.equals("Agresiva")) {
+        	
+        	player1 = new Human(nameP1, colorP1, tablero);
+        	player2 = new Agressive(nameP2, colorP2, tablero);
+        	
+        }else if(type1.equals("Human")&& type2.equals("Experta")) {
+        	
+        	player1 = new Human(nameP1, colorP1, tablero);
+        	player2 = new Expert(nameP2, colorP2, tablero);
+        	
         }
+        
 		
 		
+	}
+	
+	public Player[] getPlayers() {
+	    Player[] players = {player1, player2};
+	    return players;
+	}
+
+	public int getTurn() {
+		
+		return turn;
+	}
+	
+	public Box[][] getBoard() {
+		return tablero.getTablero();
+	}
+	
+	public Player getPlayerOnTurn(){
+		if(turn % 2 == 0) {
+			return player2;
+		}else {
+			return player1;
+		}
 	}
 } 

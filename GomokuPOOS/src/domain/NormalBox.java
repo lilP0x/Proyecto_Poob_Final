@@ -6,4 +6,12 @@ public class NormalBox extends Box{
 		
 	}
 
+	@Override
+	public void action() {
+
+		
+	}
+
+	
+
 }
