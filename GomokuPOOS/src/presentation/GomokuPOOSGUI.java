@@ -422,7 +422,7 @@ public class GomokuPOOSGUI extends JFrame {
     	pantallaModoJuego.add(fondo,Integer.valueOf(1));
     	textoPantalaModoJuego();
     	botonesTipoJuego();
-    	//getContentPane().add(pantallaModoJuego);
+    	getContentPane().add(pantallaModoJuego);
     }
     
     private void textoPantalaModoJuego() {
@@ -482,7 +482,7 @@ public class GomokuPOOSGUI extends JFrame {
     	pantallaDetallesPvsP = new JLayeredPane();
     	pantallaDetallesPvsP.add(fondo,Integer.valueOf(1));
     	
-    	getContentPane().add(pantallaDetallesPvsP);
+    	//getContentPane().add(pantallaDetallesPvsP);
     	
     }
 }
