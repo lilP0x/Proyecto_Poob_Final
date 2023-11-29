@@ -43,6 +43,9 @@ public class GomokuPOOSGUI extends JFrame {
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(new Dimension(dimension.width , dimension.height ));
         setLocationRelativeTo(null);
+        System.out.println(getWidth());
+        System.out.println(getHeight());
+       
         File rutaFuente = new File("src/recursos/Blackness.ttf");
         if (rutaFuente.exists()) {
             try {
@@ -85,7 +88,7 @@ public class GomokuPOOSGUI extends JFrame {
     }
     
 
-   /* private void pantallaInicial() {
+   /** private void pantallaInicial() {
         if (pantallaInicial != null) {
             pantallaInicial.removeAll();
         } else {
@@ -95,11 +98,6 @@ public class GomokuPOOSGUI extends JFrame {
         JLabel label = new JLabel();
         File archivoImagen = new File("src/recursos/pantalla1.jpg");
         String rutaCompleta = archivoImagen.getAbsolutePath();
-<<<<<<< HEAD
-        //System.out.println(rutaCompleta);
-        //System.out.println("C:\\Users\\juanp\\OneDrive\\Escritorio\\Universidad\\POOB\\Proyecto Final\\GomokuPOOS\\src\\recursos");
-=======
->>>>>>> e783a0ae927b0243d8a06a7ec5322f5a5de573cf
         ImageIcon imagenIcono = new ImageIcon(rutaCompleta);
         Image imagenEscalada = imagenIcono.getImage().getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
         ImageIcon imagenEscaladaIcono = new ImageIcon(imagenEscalada);
