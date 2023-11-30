@@ -19,9 +19,10 @@ public class GomokuPOOSTest {
         Color colorJugador2 = Color.BLUE;
         String modoDeJuego = "Modo Normal";
         int tamañoTablero = 15;
+        int porcentaje = 2;
         String tipo1 = "Human";
         String tipo2 = "Human";
-        juego = new GomokuPOOS(nombreJugador1, colorJugador1, nombreJugador2, colorJugador2, modoDeJuego, tamañoTablero, tipo1, tipo2);
+        juego = new GomokuPOOS(nombreJugador1, colorJugador1, nombreJugador2, colorJugador2, modoDeJuego, tamañoTablero, tipo1, tipo2,porcentaje);
     }
 
     @Test
@@ -83,6 +84,34 @@ public class GomokuPOOSTest {
         } catch (GomokuPOOSException e) {
             assertEquals("La casilla jugada esta ocupada", e.getMessage());
         }
+    }
+    
+    @Test
+    public void shouldCreateSpecialBoxes() {
+        
+        Box[][] board = juego.getBoard();
+
+        assertNotNull(board, "El tablero no debería ser nulo");
+
+        int goldenCount = countSpecialBoxes(board, Golden.class);
+        int mineCount = countSpecialBoxes(board, Mine.class);
+        int teleportCount = countSpecialBoxes(board, Teleport.class);
+
+        assertTrue(goldenCount > 0);
+        assertTrue(mineCount > 0);
+        assertTrue(teleportCount > 0);
+    }
+
+    private int countSpecialBoxes(Box[][] board, Class<? extends Box> specialBoxClass) {
+        int specialBoxesCount = 0;
+        for (Box[] row : board) {
+            for (Box box : row) {
+                if (box != null && specialBoxClass.isInstance(box)) {
+                    specialBoxesCount++;
+                }
+            }
+        }
+        return specialBoxesCount;
     }
 
         

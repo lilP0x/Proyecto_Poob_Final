@@ -76,6 +76,7 @@ public class GomokuPOOSGUI extends JFrame {
     
     
     
+    
     public GomokuPOOSGUI() {
     	setTitle("GomokuPOOS");
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
@@ -594,10 +595,14 @@ private void opcionesTablero2(JPanel todo) {
 	    fondo1.setIcon(imagenEscaladaIconoFondo);
 	    fondo1.setBounds(0, 0, getWidth(), getHeight());
 		pantallaTablero.add(fondo1,Integer.valueOf(1));
-		tableroGrafico = new JPanel(new GridLayout(10, 10, 5, 5));
-		tableroGrafico.setBackground(Color.BLACK);
+		tableroGrafico = new JPanel(new GridLayout(10, 10,2, 2));
 		tablero();
-		tableroGrafico.setBounds(getWidth()/20, getHeight() / 20, getWidth()/2, getHeight() / 2+getWidth()/5);
+		player1Partida();
+		player2Partida();
+		botonesControlJuego();
+    	
+		tableroGrafico.setBounds(getWidth()/20, getHeight() / 20, getWidth()/2+getWidth()/25, getHeight() / 2+getWidth()/5);
+		tableroGrafico.setBackground(new Color(205,133,63));
 		pantallaTablero.add(tableroGrafico, Integer.valueOf(2));
 		getContentPane().add(pantallaTablero);
 		
@@ -606,18 +611,83 @@ private void opcionesTablero2(JPanel todo) {
 	private void tablero() {
 	    tablero = new JButton[10][10];
 	    int m = 10;
-	    
-
-	    for (int i = 0; i < 10; i++) {
-	        for (int j = 0; j < 10; j++) {  // Corregir la condición del bucle y el incremento
+	    for (int i = 0; i < m; i++) {
+	        for (int j = 0; j < m; j++) {
 	            tablero[i][j] = new JButton();
-	            
+	            tablero[i][j].setBackground(new Color(250, 240, 230));
 	            tableroGrafico.add(tablero[i][j]);
 	        }
 	    }
 
 	    
 	}
+	
+	private void player1Partida() {
+		JPanel player1Informacion = new JPanel();
+		player1Informacion.setBounds(getWidth()/2+getWidth()/10,getHeight() / 5+( getHeight() / 45), getWidth()/3+(getWidth()/60)-(getWidth()/20)+(getWidth()/30), getHeight() / 4);
+		player1Informacion.setBackground(new Color(254,180,203,110));
+		player1Informacion.setLayout(new BorderLayout());
+		player1Informacion.setBorder(BorderFactory.createLineBorder(new Color(255,20,147)));
+		pantallaTablero.add(player1Informacion,Integer.valueOf(2));
+    	Font player = fuenteTitulo.deriveFont(Font.PLAIN, getWidth()/40f);
+    	JLabel textotituloPantalla = new JLabel("Player 1");
+    	textotituloPantalla.setHorizontalAlignment(SwingConstants.CENTER);
+    	textotituloPantalla.setVerticalAlignment(SwingConstants.BOTTOM);
+    	textotituloPantalla.setBounds(getWidth()/20 + getWidth()/2-(getWidth()/20)-(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),0,getWidth(), getHeight()/4);
+    	textotituloPantalla.setFont(player);
+    	player1Informacion.add(textotituloPantalla,BorderLayout.NORTH);
+	}
+	
+	private void player2Partida() {
+		JPanel player2Informacion = new JPanel();
+		player2Informacion.setBounds(getWidth()/2+getWidth()/10,getHeight() / 5+( getHeight() / 45)+getHeight() / 4+getHeight() / 27 ,  getWidth()/3+(getWidth()/60)-(getWidth()/20)+(getWidth()/30), getHeight() / 4);
+		player2Informacion.setBackground(new Color(254,180,203,110));
+		player2Informacion.setLayout(new BorderLayout());
+		player2Informacion.setBorder(BorderFactory.createLineBorder(new Color(255,20,147)));
+    	pantallaTablero.add(player2Informacion,Integer.valueOf(2));
+    	Font player = fuenteTitulo.deriveFont(Font.PLAIN, getWidth()/40f);
+    	JLabel textotituloPantalla = new JLabel("Player 2");
+    	textotituloPantalla.setHorizontalAlignment(SwingConstants.CENTER);
+    	textotituloPantalla.setVerticalAlignment(SwingConstants.BOTTOM);
+    	textotituloPantalla.setBounds(getWidth()/20 + getWidth()/2-(getWidth()/20)-(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),0,getWidth(), getHeight()/4);
+    	textotituloPantalla.setFont(player);
+    	player2Informacion.add(textotituloPantalla,BorderLayout.NORTH);
+		
+	}
+	
+	private void botonesControlJuego() {
+    	JPanel botonesJuego = new JPanel();
+    	salirJuego = new JButton("Salir");
+    	salirJuego.setBackground(new Color(205,133,63));
+    	salirJuego.setBorder(javax.swing.BorderFactory.createLineBorder(new Color (255,105,180)));
+    	Border bordeGrueso = BorderFactory.createLineBorder(Color.BLACK, 5);
+    	salirJuego.setBorder(bordeGrueso);
+    	salirJuego.setFont(fuenteBotones);
+    	reiniciarJuego = new JButton("Reiniciar");
+    	reiniciarJuego.setBackground(new Color(205,133,63));
+    	reiniciarJuego.setBorder(javax.swing.BorderFactory.createLineBorder(new Color (255,105,180)));
+    	reiniciarJuego.setBorder(bordeGrueso);
+    	reiniciarJuego.setFont(fuenteBotones);
+       
+    	salirJuego.setBounds(getWidth()/20 + getWidth()/2-(getWidth()/20)+(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),0,getWidth()/6-getWidth()/20, getHeight()/13);
+        reiniciarJuego.setBounds(getWidth()/20 +getWidth()/6+ getWidth()/2-(getWidth()/20)+(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),0,getWidth()/6-getWidth()/20, getHeight()/13);
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        botonesJuego.add(playerVSplayer, gbc);
+        
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        botonesJuego.add(playerVSbot, gbc);
+        botonesJuego.setBackground(new Color(155,155,155,0));
+        
+        botonesJuego.setBounds(getWidth()/2+getWidth()/10, getHeight() / 2, getWidth()/3+(getWidth()/60)-(getWidth()/20)+(getWidth()/30), getHeight() / 2);
+        pantallaTablero.add(salirJuego, Integer.valueOf(2));
+        pantallaTablero.add(reiniciarJuego, Integer.valueOf(2));
+    }
+	
+	
 
     
 	
