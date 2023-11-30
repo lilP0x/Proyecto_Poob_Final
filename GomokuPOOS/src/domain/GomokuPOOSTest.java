@@ -19,10 +19,9 @@ public class GomokuPOOSTest {
         Color colorJugador2 = Color.BLUE;
         String modoDeJuego = "Modo Normal";
         int tamañoTablero = 15;
-        int porcentaje = 3;
         String tipo1 = "Human";
         String tipo2 = "Human";
-        juego = new GomokuPOOS(nombreJugador1, colorJugador1, nombreJugador2, colorJugador2, modoDeJuego, tamañoTablero, tipo1, tipo2,porcentaje);
+        juego = new GomokuPOOS(nombreJugador1, colorJugador1, nombreJugador2, colorJugador2, modoDeJuego, tamañoTablero, tipo1, tipo2);
     }
 
     @Test
@@ -85,8 +84,6 @@ public class GomokuPOOSTest {
             assertEquals("La casilla jugada esta ocupada", e.getMessage());
         }
     }
-    
-   
 
         
 }
