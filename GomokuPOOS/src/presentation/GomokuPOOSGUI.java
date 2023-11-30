@@ -153,7 +153,7 @@ public class GomokuPOOSGUI extends JFrame {
     	fondoLabel.setBounds(0,0, getWidth(),getHeight());
     	pantallaInicial.add(fondoLabel,Integer.valueOf(1));
     	prepareBotones();
-    	//getContentPane().add(pantallaInicial);
+    	getContentPane().add(pantallaInicial);
     }
     
     private void boton() {
@@ -604,7 +604,7 @@ private void opcionesTablero2(JPanel todo) {
 		tableroGrafico.setBounds(getWidth()/20, getHeight() / 20, getWidth()/2+getWidth()/25, getHeight() / 2+getWidth()/5);
 		tableroGrafico.setBackground(new Color(205,133,63));
 		pantallaTablero.add(tableroGrafico, Integer.valueOf(2));
-		getContentPane().add(pantallaTablero);
+		//getContentPane().add(pantallaTablero);
 		
 	}
 	

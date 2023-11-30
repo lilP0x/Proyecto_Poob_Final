@@ -91,16 +91,21 @@ public class GomokuPOOSTest {
         
         Box[][] board = juego.getBoard();
 
-        assertNotNull(board, "El tablero no debería ser nulo");
+        assertNotNull(board);
 
         int goldenCount = countSpecialBoxes(board, Golden.class);
         int mineCount = countSpecialBoxes(board, Mine.class);
         int teleportCount = countSpecialBoxes(board, Teleport.class);
 
+        System.out.println("Golden count: " + goldenCount);
+        System.out.println("Mine count: " + mineCount);
+        System.out.println("Teleport count: " + teleportCount);
+
         assertTrue(goldenCount > 0);
         assertTrue(mineCount > 0);
         assertTrue(teleportCount > 0);
     }
+
 
     private int countSpecialBoxes(Box[][] board, Class<? extends Box> specialBoxClass) {
         int specialBoxesCount = 0;
