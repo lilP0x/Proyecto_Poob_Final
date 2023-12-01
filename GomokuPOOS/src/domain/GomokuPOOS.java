@@ -11,7 +11,7 @@ public class GomokuPOOS {
 	private int turn;
 	
 
-	public GomokuPOOS(String nameP1,Color colorP1, String nameP2,Color colorP2,String modoJuego,int size,String type1,String type2,int porcentaje){
+	public GomokuPOOS(String nameP1,Color colorP1, String nameP2,Color colorP2,String modoJuego,int size,String type1,String type2,double porcentaje){
 	tablero = new Board(size,porcentaje);	
 	addPlayers(nameP1,colorP1,nameP2,colorP2,type1,type2);
 	turn = 1;	

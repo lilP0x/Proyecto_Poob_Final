@@ -10,7 +10,7 @@ public class Board{
 	private int size;
 	private int numeroCasillasEspeciales;
 
-	public Board(int size,int porcentaje){
+	public Board(int size,double porcentaje){
 		boxes = new Box[size][size];
 		this.size = size;
 		initializeBoxes(porcentaje);
@@ -44,25 +44,24 @@ public class Board{
 	 *
 	 * @param casillasE The number of special tiles to be placed.
 	 */
-	public void iniciarCasillasEspeciales(int casillasE) {
-	    int parar = 0, casillaEspecial, posicionX, posicionY;
+	public void iniciarCasillasEspeciales(double casillasE) {
 	    Random rand = new Random();
+	    int parar = 0;
+
 	    while (parar < casillasE) {
-	        casillaEspecial = rand.nextInt(1, 7); // Generar números de 1 a 6 (inclusive)
-	        posicionX = rand.nextInt(size);
-	        posicionY = rand.nextInt(size);
+	        int posicionX = rand.nextInt(size);
+	        int posicionY = rand.nextInt(size);
+	        //System.out.println(posicionX);
+	        //System.out.println(posicionY);
+
 	        if (boxes[posicionX][posicionY] == null) {
+	            int casillaEspecial = rand.nextInt(3) + 1;  // Generar números de 1 a 3
 	            setCasillasEspeciales(casillaEspecial, posicionX, posicionY);
-	            parar++;
-	        } else if (boxes[posicionX][posicionY] == null) {
-	            casillaEspecial = rand.nextInt(1, 6);
-	            setCasillasEspeciales(casillaEspecial, posicionX, posicionY);
+	            System.out.println(casillaEspecial);
 	            parar++;
 	        }
 	    }
 	}
-
-
 
 
     /**
@@ -84,11 +83,14 @@ public class Board{
 
 	
 	
-	private void initializeBoxes(int porcentaje) {
-		iniciarCasillasEspeciales(porcentaje);
+	private void initializeBoxes(double porcentaje) {
+		int casillasE = casillasEspeciales(porcentaje);
+		iniciarCasillasEspeciales(casillasE);
 		for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                boxes[i][j] = new NormalBox(); 
+            	if(boxes[i][j]== null) {
+            		boxes[i][j] = new NormalBox(); 
+            	}
             }
         }
 	}

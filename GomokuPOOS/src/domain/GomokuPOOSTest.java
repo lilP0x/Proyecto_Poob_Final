@@ -19,7 +19,7 @@ public class GomokuPOOSTest {
         Color colorJugador2 = Color.BLUE;
         String modoDeJuego = "Modo Normal";
         int tamañoTablero = 15;
-        int porcentaje = 2;
+        double porcentaje = 0.2;
         String tipo1 = "Human";
         String tipo2 = "Human";
         juego = new GomokuPOOS(nombreJugador1, colorJugador1, nombreJugador2, colorJugador2, modoDeJuego, tamañoTablero, tipo1, tipo2,porcentaje);
@@ -86,6 +86,8 @@ public class GomokuPOOSTest {
         }
     }
     
+
+   
     @Test
     public void shouldCreateSpecialBoxes() {
         
@@ -97,15 +99,12 @@ public class GomokuPOOSTest {
         int mineCount = countSpecialBoxes(board, Mine.class);
         int teleportCount = countSpecialBoxes(board, Teleport.class);
 
-        System.out.println("Golden count: " + goldenCount);
-        System.out.println("Mine count: " + mineCount);
-        System.out.println("Teleport count: " + teleportCount);
 
         assertTrue(goldenCount > 0);
         assertTrue(mineCount > 0);
         assertTrue(teleportCount > 0);
     }
-
+	
 
     private int countSpecialBoxes(Box[][] board, Class<? extends Box> specialBoxClass) {
         int specialBoxesCount = 0;
@@ -118,6 +117,20 @@ public class GomokuPOOSTest {
         }
         return specialBoxesCount;
     }
-
+    
+    
+    /*
+    @Test
+    public void hazAlgoPorFavor() {
+    	int cas = 1;
+    	Box[][] board = juego.getBoard();
+    	board[1][1] = null;
+    	board[1][1] = new NormalBox();
+    	int count = countSpecialBoxes(board,Golden.class);
+    	assertTrue(count > 0);
+    	System.out.println(count);
+    }
+    */
+    
         
 }
