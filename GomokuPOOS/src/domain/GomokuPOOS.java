@@ -19,15 +19,28 @@ public class GomokuPOOS {
 
 	
 	public void play(int row,int column,String type) throws GomokuPOOSException{
-		
-		if(turn % 2 == 0) {
-			player2.play(row,column,type);
-		}else {
-			player1.play(row,column,type);
-		}
-		turn++;
-		
+		if(win() == true) {throw new GomokuPOOSException(GomokuPOOSException.PLAYER_WIN);}
+			if(turn % 2 == 0) {
+				player2.play(row,column,type);
+				if(win() == true) {throw new GomokuPOOSException(GomokuPOOSException.PLAYER_WIN);}
+
+			}else {
+				player1.play(row,column,type);
+				if(win() == true) {throw new GomokuPOOSException(GomokuPOOSException.PLAYER_WIN);}
+
+			}
+			turn++;
+
 	}
+	public boolean win() {
+        if (tablero.win()) {
+            return true;
+        }
+        return false;
+    }
+	
+	
+	
 	
 	private void addPlayers(String nameP1,Color colorP1,String nameP2,Color colorP2,String type1, String type2){
            

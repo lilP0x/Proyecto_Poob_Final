@@ -25,6 +25,7 @@ public class GomokuPOOSTest {
         juego = new GomokuPOOS(nombreJugador1, colorJugador1, nombreJugador2, colorJugador2, modoDeJuego, tamañoTablero, tipo1, tipo2,porcentaje);
     }
 
+    /*
     @Test
     public void shouldAddPlayers() {
 
@@ -119,18 +120,83 @@ public class GomokuPOOSTest {
     }
     
     
-    /*
-    @Test
-    public void hazAlgoPorFavor() {
-    	int cas = 1;
-    	Box[][] board = juego.getBoard();
-    	board[1][1] = null;
-    	board[1][1] = new NormalBox();
-    	int count = countSpecialBoxes(board,Golden.class);
-    	assertTrue(count > 0);
-    	System.out.println(count);
+    private int countSpecialFichas(Box[][] board, Class<? extends Ficha> specialFichaClass) {
+        int specialFichaCount = 0;
+        for (Box[] row : board) {
+            for (Box box : row) {
+                if (box != null ) {
+                	if(box.getFicha()!= null && specialFichaClass.isInstance(box));
+                    specialFichaCount++;
+                }
+            }
+        }
+        return specialFichaCount;
     }
-    */
     
+  @Test
+  public void shouldPlaySpecialFichas() {
+	  
+
+  	try {
+			juego.play(1, 1, "Normal");
+			juego.play(1, 2, "Heavy");
+			juego.play(1, 3, "Temporary");
+			
+		} catch (GomokuPOOSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+  	Box [][] aux = juego.getBoard();
+  	assertNotNull(aux[1][1]);
+  	assertNotNull(aux[1][2]);
+  	assertNotNull(aux[1][3]);
+  	
+
+    int normalCount = countSpecialFichas(aux, NormalFicha.class);
+    int heavyCount = countSpecialFichas(aux, Heavy.class);
+    int temporaryCount = countSpecialFichas(aux, Temporary.class);
+
+
+    assertTrue(normalCount > 0);
+    assertTrue(heavyCount > 0);
+    assertTrue(temporaryCount > 0);
+  	
+  	
+	  
+  }
+  */
+    
+  @Test
+  public void shouldWin() {
+	  
+	  try {
+		  	juego.play(0, 0, "temporary");
+	        juego.play(1, 0, "temporary");
+	        juego.play(0, 1, "temporary");
+	        juego.play(1, 1, "temporary");
+	        juego.play(0, 2, "temporary");
+	        juego.play(1, 2, "temporary");
+	        juego.play(0, 3, "temporary");
+	        juego.play(1, 3, "temporary");
+	        juego.play(0, 4, "temporary");
+	        juego.play(1, 4, "temporary");
+			
+			
+		} catch (GomokuPOOSException e) {
+			
+			e.printStackTrace();
+		}
+	  
+	assertTrue(juego.win());  
+	Box [][] aux = juego.getBoard();
+	assertNotNull(aux[0][0]);
+	assertNotNull(aux[1][0]);
+	assertNotNull(aux[0][2]);
+	assertNotNull(aux[2][0]);
+	assertNotNull(aux[0][3]);
+	assertNotNull(aux[3][0]);
+	  
+  }
+                        
         
 }

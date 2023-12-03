@@ -80,6 +80,60 @@ public class Board{
 	        boxes[posicionX][posicionY] = new Teleport();
 	    }
 	}
+	
+	public boolean win() {
+        // Verifica las filas, columnas y diagonales
+        if (checkRows() || checkColumns() || checkDiagonals()) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkRows() {
+        for (int i = 0; i < boxes.length; i++) {
+            for (int j = 0; j <= boxes.length - 5; j++) {
+                if (checkSequence(boxes[i][j], boxes[i][j + 1], boxes[i][j + 2], boxes[i][j + 3], boxes[i][j + 4])) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean checkColumns() {
+        for (int i = 0; i <= boxes.length - 5; i++) {
+            for (int j = 0; j < boxes.length; j++) {
+                if (checkSequence(boxes[i][j], boxes[i + 1][j], boxes[i + 2][j], boxes[i + 3][j], boxes[i + 4][j])) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean checkDiagonals() {
+        for (int i = 0; i <= boxes.length - 5; i++) {
+            for (int j = 0; j <= boxes.length - 5; j++) {
+                if (checkSequence(boxes[i][j], boxes[i + 1][j + 1], boxes[i + 2][j + 2], boxes[i + 3][j + 3], boxes[i + 4][j + 4])) {
+                    return true;
+                }
+
+                if (checkSequence(boxes[i][j + 4], boxes[i + 1][j + 3], boxes[i + 2][j + 2], boxes[i + 3][j + 1], boxes[i + 4][j])) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean checkSequence(Box... boxes) {
+        for (int i = 0; i < boxes.length - 1; i++) {
+            if (boxes[i].getFicha() == null || boxes[i + 1].getFicha() == null || !boxes[i].getFicha().color.equals(boxes[i + 1].getFicha().color)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 	
 	

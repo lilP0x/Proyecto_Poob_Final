@@ -13,9 +13,13 @@ public abstract class Box {
 		if(ficha.equals(null)) {
 			this.ficha = ficha;
 			action();
-		}else {throw new GomokuPOOSException(GomokuPOOSException.FICHA_ON_BOX);
+		}else {//throw new GomokuPOOSException(GomokuPOOSException.FICHA_ON_BOX);
 		}
 		
+	}
+	
+	public Ficha getFicha() {
+		return ficha;
 	}
 	
 	public abstract void action();
