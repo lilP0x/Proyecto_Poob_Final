@@ -4,12 +4,12 @@ import java.awt.Color;
 
 public class Expert extends Machine {
 
-	public Expert(String name, Color color, Board tablero) {
-		super(name, color, tablero);
+	public Expert(String name, Color color) {
+		super(name, color);
 	}
 
 	@Override
-	public void play(int row, int column, String type) throws GomokuPOOSException {
+	public void play(int row, int column, String type, Board tablero) throws GomokuPOOSException {
 		
 	}
 

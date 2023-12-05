@@ -8,7 +8,7 @@ public class Temporary extends Ficha{
 	public Temporary(Color color) {
 		super(color);
 		state = true;
-		
+		this.type = 't';
 	}
 	
 	public boolean getState() {

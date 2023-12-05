@@ -17,10 +17,10 @@ public class Board{
 		
 	}
 	
-	public void play(int row, int column,Ficha ficha) throws GomokuPOOSException{
+	public void play(int row, int column,String type, Color color) throws GomokuPOOSException{
 		
-		boxes[row][column].play(ficha);
-		
+			boxes[row][column].play(type,color);
+			
 		
 	}
 	
@@ -34,6 +34,25 @@ public class Board{
         return (int) casillasEspeciales;
     }
 	
+	public char[][] getBoard() {
+	    char[][] piedras = new char[size][size];
+	    for (int i = 0; i < size; i++) {
+	        for (int j = 0; j < size; j++) {
+	            if (boxes[i][j] != null && boxes[i][j].getFicha() != null) {
+	                piedras[i][j] = boxes[i][j].getType();
+	            } else {
+	                piedras[i][j] = '-'; // Puedes usar cualquier carácter que represente una ficha nula
+	            }
+	        }
+	    }
+	    return piedras;
+	}
+
+	
+	
+	public int getSize () {
+		return size;
+	}
 	
 	public Box getBox(int i, int j) {
 		return boxes[i][j];
@@ -43,7 +62,7 @@ public class Board{
 	 * Initializes the special tiles on the game board.
 	 *
 	 * @param casillasE The number of special tiles to be placed.
-	 */
+	 */		
 	public void iniciarCasillasEspeciales(double casillasE) {
 	    Random rand = new Random();
 	    int parar = 0;
@@ -55,9 +74,8 @@ public class Board{
 	        //System.out.println(posicionY);
 
 	        if (boxes[posicionX][posicionY] == null) {
-	            int casillaEspecial = rand.nextInt(3) + 1;  // Generar números de 1 a 3
+	            int casillaEspecial = rand.nextInt(3) + 1;
 	            setCasillasEspeciales(casillaEspecial, posicionX, posicionY);
-	            System.out.println(casillaEspecial);
 	            parar++;
 	        }
 	    }
@@ -82,7 +100,7 @@ public class Board{
 	}
 	
 	public boolean win() {
-        // Verifica las filas, columnas y diagonales
+		
         if (checkRows() || checkColumns() || checkDiagonals()) {
             return true;
         }
@@ -92,7 +110,7 @@ public class Board{
     private boolean checkRows() {
         for (int i = 0; i < boxes.length; i++) {
             for (int j = 0; j <= boxes.length - 5; j++) {
-                if (checkSequence(boxes[i][j], boxes[i][j + 1], boxes[i][j + 2], boxes[i][j + 3], boxes[i][j + 4])) {
+                if (checkSequence(boxes[i][j], boxes[i][j + 1], boxes[i][j + 2], boxes[i][j + 3], boxes[i][j + 4])){
                     return true;
                 }
             }
@@ -126,16 +144,18 @@ public class Board{
         return false;
     }
 
+    
     private boolean checkSequence(Box... boxes) {
         for (int i = 0; i < boxes.length - 1; i++) {
-            if (boxes[i].getFicha() == null || boxes[i + 1].getFicha() == null || !boxes[i].getFicha().color.equals(boxes[i + 1].getFicha().color)) {
+            if (boxes[i].getFicha() == null || boxes[i + 1].getFicha() == null || 
+                (boxes[i].getFicha().color == null || boxes[i + 1].getFicha().color == null) ||
+                !boxes[i].getFicha().color.equals(boxes[i + 1].getFicha().color)) {
                 return false;
             }
         }
         return true;
     }
 
-	
 	
 	private void initializeBoxes(double porcentaje) {
 		int casillasE = casillasEspeciales(porcentaje);

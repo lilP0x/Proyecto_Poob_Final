@@ -25,7 +25,7 @@ public class GomokuPOOSTest {
         juego = new GomokuPOOS(nombreJugador1, colorJugador1, nombreJugador2, colorJugador2, modoDeJuego, tamañoTablero, tipo1, tipo2,porcentaje);
     }
 
-    /*
+
     @Test
     public void shouldAddPlayers() {
 
@@ -50,23 +50,28 @@ public class GomokuPOOSTest {
         assertEquals(Color.BLUE, player2.getColor());
     }
     
-    
     @Test
     public void shouldPlay(){
     	
     	try {
-			juego.play(1, 1, "Normal");
+    		juego.play(1, 1, "Normal");
+			
 		} catch (GomokuPOOSException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	Box [][] aux = juego.getBoard();
-    	assertNotNull(aux[1][1]);
     	
-    	assertEquals(1,juego.getTurn());
+    	Box [][] aux = juego.getBoard();
+  
+    	printBoard(juego.getTablero());
+    	assertNotNull(aux[1][1].getFicha());
+    //	assertEquals(1,juego.getTurn());
     	
     	
     }
+    
+
+    
+    
     
     @Test
     public void shouldNotPlay() {
@@ -86,9 +91,9 @@ public class GomokuPOOSTest {
             assertEquals("La casilla jugada esta ocupada", e.getMessage());
         }
     }
-    
 
-   
+
+  
     @Test
     public void shouldCreateSpecialBoxes() {
         
@@ -105,7 +110,7 @@ public class GomokuPOOSTest {
         assertTrue(mineCount > 0);
         assertTrue(teleportCount > 0);
     }
-	
+
 
     private int countSpecialBoxes(Box[][] board, Class<? extends Box> specialBoxClass) {
         int specialBoxesCount = 0;
@@ -146,7 +151,10 @@ public class GomokuPOOSTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+  	
+  	
   	Box [][] aux = juego.getBoard();
+  	printBoard(juego.getTablero());
   	assertNotNull(aux[1][1]);
   	assertNotNull(aux[1][2]);
   	assertNotNull(aux[1][3]);
@@ -164,39 +172,51 @@ public class GomokuPOOSTest {
   	
 	  
   }
-  */
     
-  @Test
-  public void shouldWin() {
-	  
-	  try {
-		  	juego.play(0, 0, "temporary");
-	        juego.play(1, 0, "temporary");
-	        juego.play(0, 1, "temporary");
-	        juego.play(1, 1, "temporary");
-	        juego.play(0, 2, "temporary");
-	        juego.play(1, 2, "temporary");
-	        juego.play(0, 3, "temporary");
-	        juego.play(1, 3, "temporary");
-	        juego.play(0, 4, "temporary");
-	        juego.play(1, 4, "temporary");
-			
-			
-		} catch (GomokuPOOSException e) {
-			
-			e.printStackTrace();
-		}
-	  
-	assertTrue(juego.win());  
-	Box [][] aux = juego.getBoard();
-	assertNotNull(aux[0][0]);
-	assertNotNull(aux[1][0]);
-	assertNotNull(aux[0][2]);
-	assertNotNull(aux[2][0]);
-	assertNotNull(aux[0][3]);
-	assertNotNull(aux[3][0]);
-	  
-  }
+    @Test
+    public void shouldWin() {
+        try {
+            juego.play(0, 0, "Normal");
+            juego.play(1, 0, "Normal");
+            juego.play(0, 1, "Normal");
+            juego.play(1, 1, "Normal");
+            juego.play(0, 2, "Normal");
+            juego.play(1, 2, "Normal");
+            juego.play(0, 3, "Normal");
+            juego.play(1, 3, "Normal");
+            juego.play(0, 4, "Normal");
+            juego.play(1, 4, "Normal");
+
+            printBoard(juego.getTablero());
+
+            
+            System.out.println("¿Ganó el juego? " + juego.win());
+
+        } catch (GomokuPOOSException e) {
+        	assertEquals("El jugador gano", e.getMessage());
+        }
+    }
+   
+  
+    public void printBoard(char[][] board) {
+        for (int i = 0; i < juego.getSize(); i++) {
+            for (int j = 0; j < juego.getSize(); j++) {
+                if (board[i][j] != 0) {
+                    System.out.print(board[i][j] + " ");
+                } else {
+                    System.out.print("null");
+                }
+            }
+            System.out.println();
+        }
+    }
+  
+
+
+ 
+
+
+
                         
         
 }

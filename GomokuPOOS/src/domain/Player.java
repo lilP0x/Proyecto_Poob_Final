@@ -8,16 +8,16 @@ import java.util.*;
 public abstract class Player{
 	protected String name;
 	protected Color color;
-	protected Board tablero;
+	//protected Board tablero;
 	protected ArrayList<Ficha> fichas = new ArrayList<>();  
 
-	public Player(String name,Color color, Board tablero){
+	public Player(String name,Color color){
 		this.name = name;
 		this.color = color;
-		this.tablero = tablero;
+		//this.tablero = tablero;
 	}
 	
-	public abstract void play(int row,int column,String type) throws GomokuPOOSException;
+	public abstract void play(int row,int column,String type,Board tablero) throws GomokuPOOSException;
 	
 	
 	public String getName() {

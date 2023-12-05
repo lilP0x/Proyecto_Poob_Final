@@ -2,12 +2,17 @@
 package presentation;
 
 import java.awt.BorderLayout;
+import java.util.HashMap;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.GridBagConstraints;
@@ -22,6 +27,7 @@ import javax.swing.JLabel;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
@@ -38,17 +44,10 @@ public class GomokuPOOSGUI extends JFrame {
 	private Font fuenteTitulo;
 	private Font fuenteBotones;
 	private Font fuenteGeneral;
-	private JTextField nombreTablero;
-	private JTextField porcentajeCasillasEspeciales;
-	private JTextField porcentajePiedrasEspeciales;
-    private JComboBox  dimensionesTablero;
-    private JComboBox  tipoJuego;
-    private JTextField  nombreJugador1;
-    private JComboBox  colorJugador1;
-    private JTextField  nombreJugador2;
-    private JComboBox  colorJugador2;
-    
-       
+
+	private HashMap<String, ImageIcon> fichas = new HashMap<String, ImageIcon>();
+	
+
 	
 	//pantalla inicial
     private JLayeredPane pantallaInicial;
@@ -66,6 +65,15 @@ public class GomokuPOOSGUI extends JFrame {
     private JButton inicioJuegoPvsP;
     private JButton volverJuegoPvsP;
     private JPanel detalleTablero;
+    private JTextField  nombreJugador1;
+    private JComboBox  colorJugador1;
+    private JTextField  nombreJugador2;
+    private JComboBox  colorJugador2;
+	private JTextField nombreTablero;
+	private JTextField porcentajeCasillasEspeciales;
+	private JTextField porcentajePiedrasEspeciales;
+    private JComboBox  dimensionesTablero;
+    private JComboBox  tipoJuego;
     
     //pantalla tablero
     private JLayeredPane pantallaTablero;
@@ -73,14 +81,25 @@ public class GomokuPOOSGUI extends JFrame {
     private JButton reiniciarJuego;
     private JButton[][] tablero;
     private JPanel tableroGrafico;
+    private JPanel player1Informacion;
+    private JPanel player2Informacion;
+    private String nombreTableroTEXTO;
+    private String nombreJugador1TEXTO;
+    private String nombreJugador2TEXTO;
+    private String puntaje1;
+    private String puntaje2;
+    
     
     
     
     
     public GomokuPOOSGUI() {
+    	fichas.put("p", createImageIcon("src/recursos/PESADANEGRA.png"));
+    	fichas.put("r", createImageIcon("recursos/PESADABLANCA.png"));
+    	
     	setTitle("GomokuPOOS");
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(new Dimension(dimension.width/2 , dimension.height/2));
+        setSize(new Dimension(dimension.width, dimension.height));
         setLocationRelativeTo(null);
     	prepareElements();
     	
@@ -93,18 +112,96 @@ public class GomokuPOOSGUI extends JFrame {
         gomoku.setVisible(true);
     }
 
+    protected ImageIcon createImageIcon(String path) {
+        URL imgURL = getClass().getResource(path);
+        if (imgURL != null) {
+               ImageIcon foto = new ImageIcon(imgURL);
+            int width = 40;
+            int height = 40;
+            Image fotod = foto.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            return new ImageIcon(fotod);
+        } else {
+            return null;
+        }
+    }
+    
     private void prepareElements() {
     	fuenteTitulo();
     	imagenEscaladaFONDO();
     	imagenEscalada();
     	preparePantallaI();
+    	funcionalidadesBotonesPantallaInicio();  
     	preparePantallaModoJuego();
+    	funcionalidadesBotonesModoJuego();
     	preparePantallaDetallesPartidaPlayerVSPlayer();
     	preparePantallaDelTablero();
-    	
+    	funcionalidadesBotonesDEtallePartidaPVSP();
     	
     }
     
+    private void funcionalidadesBotonesPantallaInicio() {
+    	ActionListener oyenteInicio;
+        oyenteInicio = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                getContentPane().removeAll();
+                getContentPane().add(pantallaModoJuego);
+                getContentPane().revalidate();
+                getContentPane().repaint();
+            }
+        };
+        inicio.addActionListener(oyenteInicio);
+    }
+    
+    private void funcionalidadesBotonesModoJuego() {
+    	ActionListener oyenteModoJuegoPVSP;
+    	oyenteModoJuegoPVSP = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                getContentPane().removeAll();
+                getContentPane().add(pantallaDetallesPvsP);
+                getContentPane().revalidate();
+                getContentPane().repaint();
+            }
+        };
+        playerVSplayer.addActionListener(oyenteModoJuegoPVSP);
+    }
+    
+    private void funcionalidadesBotonesDEtallePartidaPVSP() {
+    	ActionListener oyenteGuardarDetallesPartida;
+        oyenteGuardarDetallesPartida = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	guardarInformacionPartidaPVSP();
+            	
+                getContentPane().removeAll();
+                nombreJugador1TEXTO = nombreJugador1.getText();
+                nombreJugador2TEXTO = nombreJugador2.getText();
+                JLabel textoTablero = new JLabel();
+                textoTablero.setText(nombreTableroTEXTO);
+                textoTablero.setBackground(Color.WHITE);
+                Font ff = fuenteTitulo.deriveFont(Font.PLAIN, getWidth()/45f);
+                textoTablero.setFont(ff);
+                textoTablero.setBounds(getWidth()/2 + getWidth()/10,0,getWidth(), getHeight()/4);
+                pantallaTablero.add(textoTablero, Integer.valueOf(2));
+                JLabel textotituloPantalla = new JLabel();
+            	textotituloPantalla.setText(nombreJugador1TEXTO);
+            	textotituloPantalla.setHorizontalAlignment(SwingConstants.CENTER);
+            	textotituloPantalla.setVerticalAlignment(SwingConstants.BOTTOM);
+            	textotituloPantalla.setBounds(getWidth()/20 + getWidth()/2-(getWidth()/20)-(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),0,getWidth(), getHeight()/4);
+            	textotituloPantalla.setFont(fuenteTitulo.deriveFont(Font.PLAIN, getWidth()/40f));
+            	player1Informacion.add(textotituloPantalla,BorderLayout.NORTH);
+            	JLabel textotituloPantalla1 = new JLabel();
+            	textotituloPantalla1.setText(nombreJugador2TEXTO);
+            	textotituloPantalla1.setHorizontalAlignment(SwingConstants.CENTER);
+            	textotituloPantalla1.setVerticalAlignment(SwingConstants.BOTTOM);
+            	textotituloPantalla1.setBounds(getWidth()/20 + getWidth()/2-(getWidth()/20)-(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),0,getWidth(), getHeight()/4);
+            	textotituloPantalla1.setFont(fuenteTitulo.deriveFont(Font.PLAIN, getWidth()/40f));
+            	player2Informacion.add(textotituloPantalla1,BorderLayout.NORTH);
+                getContentPane().add(pantallaTablero);
+                getContentPane().revalidate();
+                getContentPane().repaint();
+            }
+        };
+        inicioJuegoPvsP.addActionListener(oyenteGuardarDetallesPartida);
+    }
     private void fuenteTitulo() {
     	File rutaFuente = new File("src/recursos/Blackness.ttf");
         if (rutaFuente.exists()) {
@@ -232,7 +329,6 @@ public class GomokuPOOSGUI extends JFrame {
     	pantallaModoJuego.add(fondo1,Integer.valueOf(1));
     	textoPantalaModoJuego();
     	botonesTipoJuego();
-    	//getContentPane().add(pantallaModoJuego);
     }
     
     private void textoPantalaModoJuego() {
@@ -263,26 +359,21 @@ public class GomokuPOOSGUI extends JFrame {
         playerVSbot.setBorder(javax.swing.BorderFactory.createLineBorder(new Color (255,105,180)));
     	playerVSbot.setBorder(bordeGrueso);
         playerVSbot.setFont(fuenteBotones);
-        
         playerVSplayer.setPreferredSize(new Dimension(getWidth() / 4, getHeight() / 6));
-        playerVSbot.setPreferredSize(new Dimension(getWidth() / 4, getHeight() / 6));
-        
+        playerVSbot.setPreferredSize(new Dimension(getWidth() / 4, getHeight() / 6)); 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         botonesJuego.add(playerVSplayer, gbc);
-        
         JLabel espacio = new JLabel();
         espacio.setPreferredSize(new Dimension(getWidth() / 10, getHeight() / 6));
         gbc.gridx = 1;
         gbc.gridy = 0;
         botonesJuego.add(espacio,gbc);
-        
         gbc.gridx = 2;
         gbc.gridy = 0;
         botonesJuego.add(playerVSbot, gbc);
         botonesJuego.setBackground(new Color(155,155,155,0));
-        
         botonesJuego.setBounds(0, getHeight() / 2, getWidth(), getHeight() / 2);
         pantallaModoJuego.add(botonesJuego, Integer.valueOf(2));
     	
@@ -305,7 +396,7 @@ public class GomokuPOOSGUI extends JFrame {
     	pantallaDetallesPvsP.add(fondo1,Integer.valueOf(1));
     	detallesTablero();
     	preparebuttonsPvsp();
-    	//getContentPane().add(pantallaDetallesPvsP);
+    	
     	
     }
     
@@ -586,6 +677,7 @@ private void opcionesTablero2(JPanel todo) {
 	    } else {
 	    	pantallaTablero = new JLayeredPane();
 	    }
+		
     	JLabel fondo1 = new JLabel();
 	    File archivoImagenFondo = new File("src/recursos/fondo.jpg");
 	    String rutaCompletaFondo = archivoImagenFondo.getAbsolutePath();
@@ -599,13 +691,11 @@ private void opcionesTablero2(JPanel todo) {
 		tablero();
 		player1Partida();
 		player2Partida();
+		puntajeJuagadores();
 		botonesControlJuego();
-    	
 		tableroGrafico.setBounds(getWidth()/20, getHeight() / 20, getWidth()/2+getWidth()/25, getHeight() / 2+getWidth()/5);
 		tableroGrafico.setBackground(new Color(205,133,63));
-		pantallaTablero.add(tableroGrafico, Integer.valueOf(2));
-		//getContentPane().add(pantallaTablero);
-		
+		pantallaTablero.add(tableroGrafico, Integer.valueOf(2));	
 	}
 	
 	private void tablero() {
@@ -623,35 +713,26 @@ private void opcionesTablero2(JPanel todo) {
 	}
 	
 	private void player1Partida() {
-		JPanel player1Informacion = new JPanel();
+		player1Informacion = new JPanel();
 		player1Informacion.setBounds(getWidth()/2+getWidth()/10,getHeight() / 5+( getHeight() / 45), getWidth()/3+(getWidth()/60)-(getWidth()/20)+(getWidth()/30), getHeight() / 4);
 		player1Informacion.setBackground(new Color(254,180,203,110));
 		player1Informacion.setLayout(new BorderLayout());
 		player1Informacion.setBorder(BorderFactory.createLineBorder(new Color(255,20,147)));
 		pantallaTablero.add(player1Informacion,Integer.valueOf(2));
-    	Font player = fuenteTitulo.deriveFont(Font.PLAIN, getWidth()/40f);
-    	JLabel textotituloPantalla = new JLabel("Player 1");
-    	textotituloPantalla.setHorizontalAlignment(SwingConstants.CENTER);
-    	textotituloPantalla.setVerticalAlignment(SwingConstants.BOTTOM);
-    	textotituloPantalla.setBounds(getWidth()/20 + getWidth()/2-(getWidth()/20)-(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),0,getWidth(), getHeight()/4);
-    	textotituloPantalla.setFont(player);
-    	player1Informacion.add(textotituloPantalla,BorderLayout.NORTH);
+    	
+
 	}
 	
 	private void player2Partida() {
-		JPanel player2Informacion = new JPanel();
+		player2Informacion = new JPanel();
 		player2Informacion.setBounds(getWidth()/2+getWidth()/10,getHeight() / 5+( getHeight() / 45)+getHeight() / 4+getHeight() / 27 ,  getWidth()/3+(getWidth()/60)-(getWidth()/20)+(getWidth()/30), getHeight() / 4);
 		player2Informacion.setBackground(new Color(254,180,203,110));
 		player2Informacion.setLayout(new BorderLayout());
 		player2Informacion.setBorder(BorderFactory.createLineBorder(new Color(255,20,147)));
     	pantallaTablero.add(player2Informacion,Integer.valueOf(2));
-    	Font player = fuenteTitulo.deriveFont(Font.PLAIN, getWidth()/40f);
-    	JLabel textotituloPantalla = new JLabel("Player 2");
-    	textotituloPantalla.setHorizontalAlignment(SwingConstants.CENTER);
-    	textotituloPantalla.setVerticalAlignment(SwingConstants.BOTTOM);
-    	textotituloPantalla.setBounds(getWidth()/20 + getWidth()/2-(getWidth()/20)-(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),0,getWidth(), getHeight()/4);
-    	textotituloPantalla.setFont(player);
-    	player2Informacion.add(textotituloPantalla,BorderLayout.NORTH);
+    	
+    	
+
 		
 	}
 	
@@ -668,25 +749,28 @@ private void opcionesTablero2(JPanel todo) {
     	reiniciarJuego.setBorder(javax.swing.BorderFactory.createLineBorder(new Color (255,105,180)));
     	reiniciarJuego.setBorder(bordeGrueso);
     	reiniciarJuego.setFont(fuenteBotones);
-       
-    	salirJuego.setBounds(getWidth()/20 + getWidth()/2-(getWidth()/20)+(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),0,getWidth()/6-getWidth()/20, getHeight()/13);
-        reiniciarJuego.setBounds(getWidth()/20 +getWidth()/6+ getWidth()/2-(getWidth()/20)+(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),0,getWidth()/6-getWidth()/20, getHeight()/13);
-        
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        botonesJuego.add(playerVSplayer, gbc);
-        
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        botonesJuego.add(playerVSbot, gbc);
-        botonesJuego.setBackground(new Color(155,155,155,0));
-        
-        botonesJuego.setBounds(getWidth()/2+getWidth()/10, getHeight() / 2, getWidth()/3+(getWidth()/60)-(getWidth()/20)+(getWidth()/30), getHeight() / 2);
+    	salirJuego.setBounds(getWidth()/20 + getWidth()/2-(getWidth()/20)+(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),getHeight()/2+getHeight()/4+getHeight()/20,getWidth()/6-getWidth()/20, getHeight()/13);
+        reiniciarJuego.setBounds(getWidth()/20 +getWidth()/6+ getWidth()/2-(getWidth()/20)+(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),getHeight()/2+getHeight()/4+getHeight()/20,getWidth()/6-getWidth()/20, getHeight()/13);
         pantallaTablero.add(salirJuego, Integer.valueOf(2));
         pantallaTablero.add(reiniciarJuego, Integer.valueOf(2));
     }
 	
+	private void textosFijosTablero() {
+		
+	}
+	
+	private void puntajeJuagadores() {
+		puntaje1 = "0";
+		puntaje2 = "0";
+		JLabel puntajepersona1 = new JLabel("Puntaje: "+puntaje1);
+		JLabel puntajepersona2 = new JLabel("Puntaje: "+puntaje2);
+		puntajepersona1.setFont(fuenteTitulo.deriveFont(Font.PLAIN, getWidth()/40f));
+		puntajepersona2.setFont(fuenteTitulo.deriveFont(Font.PLAIN, getWidth()/40f));
+		puntajepersona1.setHorizontalAlignment(SwingConstants.CENTER);
+		puntajepersona2.setHorizontalAlignment(SwingConstants.CENTER);
+		player1Informacion.add(puntajepersona1, BorderLayout.SOUTH);
+		player2Informacion.add(puntajepersona2,BorderLayout.SOUTH);
+	}
 	
 
     
@@ -699,20 +783,31 @@ private void opcionesTablero2(JPanel todo) {
     }
     
     private void prepareActions() {
-    	addComponentListener(new java.awt.event.ComponentAdapter() {
+        /**addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 actualizarDimensiones();
             }
-    	});
-    	WindowAdapter oyenteDeSalidaW;
+        });*/
+
+        WindowAdapter oyenteDeSalidaW;
         oyenteDeSalidaW = new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 exitWindow();
             }
         };
         this.addWindowListener(oyenteDeSalidaW);
-        
+
     }
+
+    
+    	
+    private void guardarInformacionPartidaPVSP() {
+    	nombreTableroTEXTO = nombreTablero.getText();
+    	nombreJugador1TEXTO = nombreJugador1.getText();
+    	nombreJugador2TEXTO = nombreJugador2.getText();
+    	
+    }
+    
     private void exitWindow(){
         int result = JOptionPane.showConfirmDialog(this, "Seguro que quiere salir", "¿Salir?", JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_NO_OPTION) {

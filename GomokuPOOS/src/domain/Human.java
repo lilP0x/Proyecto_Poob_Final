@@ -5,27 +5,16 @@ import java.lang.reflect.Constructor;
 
 public class Human extends Player{
 
-	public Human(String name, Color color,Board tablero) {
-		super(name, color,tablero);
+	public Human(String name, Color color) {
+		super(name, color);
+		this.color = color;
+		
 	}
 	
 
 	@Override
-	public void play(int row, int column, String type) throws GomokuPOOSException{
-	    
-		if(type.equals("temporary")) {
-			Ficha ficha = new Temporary(color);
-			tablero.play(row, column,ficha);
-			fichas.add(ficha);
-		}else if(type.equals("Normal")) {
-			Ficha ficha = new NormalFicha(color);
-			tablero.play(row, column,ficha);
-			fichas.add(ficha);
-		}else if(type.equals("Heavy")) {
-			Ficha ficha = new Heavy(color);
-			tablero.play(row, column,ficha);
-			fichas.add(ficha);
-		}
+	public void play(int row, int column, String type,Board tablero) throws GomokuPOOSException{
+		tablero.play(row,column,type,color );
 	}
 	
  }

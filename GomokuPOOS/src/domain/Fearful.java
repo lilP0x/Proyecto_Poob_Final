@@ -4,13 +4,13 @@ import java.awt.Color;
 
 public class Fearful extends Machine {
 
-	public Fearful(String name, Color color, Board tablero) {
-		super(name, color, tablero);
+	public Fearful(String name, Color color) {
+		super(name, color);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public void play(int row, int column, String type) {
+	public void play(int row, int column, String type, Board tablero) {
 		// TODO Auto-generated method stub
 		
 	}

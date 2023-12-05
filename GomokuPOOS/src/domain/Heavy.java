@@ -6,7 +6,7 @@ public class Heavy extends Ficha {
 
 	public Heavy(Color color) {
 		super(color);
-		
+		this.type = 'h';
 	}
 	
 }
