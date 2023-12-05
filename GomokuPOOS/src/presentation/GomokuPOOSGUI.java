@@ -704,6 +704,7 @@ private void opcionesTablero2(JPanel todo) {
 	    for (int i = 0; i < m; i++) {
 	        for (int j = 0; j < m; j++) {
 	            tablero[i][j] = new JButton();
+	            //tablero[i][j].addActionListener(new BotonActionListener(i, j));
 	            tablero[i][j].setBackground(new Color(250, 240, 230));
 	            tableroGrafico.add(tablero[i][j]);
 	        }
@@ -817,5 +818,19 @@ private void opcionesTablero2(JPanel todo) {
         }
     }
 }
+/**private class BotonActionListener implements ActionListener {
+    private int fila;
+    private int columna;
+
+    public BotonActionListener(int fila, int columna) {
+        this.fila = fila;
+        this.columna = columna;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        
+    }
+}*/
 
 
