@@ -35,6 +35,8 @@ public class Board{
 		return boxes;
 	}
 	
+	
+	
 	public char[][] getBoardWithSymbols() {
 	    char[][] symbols = new char[size][size];
 	    for (int i = 0; i < size; i++) {
@@ -124,12 +126,15 @@ public class Board{
 	public void setCasillasEspeciales(int casillaEspecial, int posicionX, int posicionY) {
 	    if (casillaEspecial == 1) {
 	        boxes[posicionX][posicionY] = new Golden();
+	        boxes[posicionX][posicionY].setPosition(posicionX, posicionY);
 	        //boxes[posicionX][posicionY].init(this);
 	    } else if (casillaEspecial == 2) {
-	        boxes[posicionX][posicionY] = new Mine();
+	        boxes[posicionX][posicionY] = new Golden();
+	        boxes[posicionX][posicionY].setPosition(posicionX, posicionY);
 	        //boxes[posicionX][posicionY].init(this);
 	    } else if (casillaEspecial == 3) {
 	        boxes[posicionX][posicionY] = new Teleport();
+	        boxes[posicionX][posicionY].setPosition(posicionX, posicionY);
 	        //boxes[posicionX][posicionY].init(this);
 	    }
 	}
@@ -198,7 +203,9 @@ public class Board{
 		for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
             	if(boxes[i][j]== null) {
-            		boxes[i][j] = new NormalBox();}
+            		boxes[i][j] = new NormalBox();
+            		boxes[i][j].setPosition(i,j);
+            		}
             		
             	}
             }

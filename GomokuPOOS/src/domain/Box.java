@@ -7,6 +7,7 @@ public abstract class Box {
 	protected Ficha ficha;
 	protected Board tablero;
 	protected char type;
+	protected int row,column;
 	
 	public Box(){
 
@@ -26,6 +27,19 @@ public abstract class Box {
 		}
 		
 	}
+	
+	public void setPosition(int row, int column) {
+        this.row = row;
+        this.column = column;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
 	
 	
 	public void setFicha(Ficha nuevaFicha) {

@@ -24,8 +24,8 @@ public class GomokuPOOSTest {
         String tipo2 = "Human";
         juego = new GomokuPOOS(nombreJugador1, colorJugador1, nombreJugador2, colorJugador2, modoDeJuego, tamañoTablero, tipo1, tipo2,porcentaje);
     }
-
 /*
+
     @Test
     public void shouldAddPlayers() {
 
@@ -71,8 +71,6 @@ public class GomokuPOOSTest {
     
 
     
-    
-    /*
     @Test
     public void shouldNotPlay() {
         try {
@@ -196,8 +194,8 @@ public class GomokuPOOSTest {
         }
         assertEquals("El jugador gano", s);
     }
-   
-  */
+   */
+  
     public void printBoard(char[][] board) {
         for (int i = 0; i < juego.getSize(); i++) {
             for (int j = 0; j < juego.getSize(); j++) {
@@ -211,14 +209,14 @@ public class GomokuPOOSTest {
         }
     }
  
-  /*
+ /*
     @Test
     public void shouldTeleportFicha() {
     	 printBoard(juego.getBoardWithSymbols());
     }
-    */
+ 
     
-    
+    /*
     @Test
     public void testTeleportBox() {
         try {
@@ -239,9 +237,47 @@ public class GomokuPOOSTest {
             fail("No debería lanzar una excepción aquí");
         }
     }
-
+*/
  
+    @Test
+    public void testMineExplode() {
+        try {
+            // Agrega una casilla Mine en una ubicación específica
+            juego.getBoard()[1][1] = new Mine();
+            
+            // Coloca fichas alrededor de la casilla Mine
+            printBoard(juego.getTablero());
+            System.out.println("-------------------------------------------");
+            juego.play(0, 0, "Normal");
+            juego.play(0, 1, "Normal");
+            juego.play(0, 2, "Normal");
+            juego.play(1, 0, "Normal");
+            juego.play(1, 2, "Normal");
+            juego.play(2, 0, "Normal");
+            juego.play(2, 1, "Normal");
+            juego.play(2, 2, "Normal");
+            printBoard(juego.getTablero());
+            System.out.println("-------------------------------------------");
+            juego.play(1, 1, "Normal");
+            printBoard(juego.getTablero());
+            System.out.println("-------------------------------------------");
+            printBoard(juego.getBoardWithSymbols());
+           
 
+            // Verifica que las fichas alrededor de la casilla Mine hayan desaparecido
+            assertNull(juego.getBoard()[0][0].getFicha());
+            assertNull(juego.getBoard()[0][1].getFicha());
+            assertNull(juego.getBoard()[0][2].getFicha());
+            assertNull(juego.getBoard()[1][0].getFicha());
+            assertNull(juego.getBoard()[1][2].getFicha());
+            assertNull(juego.getBoard()[2][0].getFicha());
+            assertNull(juego.getBoard()[2][1].getFicha());
+            assertNull(juego.getBoard()[2][2].getFicha());
+        } catch (GomokuPOOSException e) {
+            e.printStackTrace();
+            fail("No debería lanzar una excepción aquí");
+        }
+    }
 
 
                         

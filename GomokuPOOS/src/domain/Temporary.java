@@ -19,4 +19,6 @@ public class Temporary extends Ficha{
 	public void changeState() {
 		state = false;
 	}
+	
+	
 }
