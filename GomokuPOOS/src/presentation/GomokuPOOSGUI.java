@@ -47,8 +47,6 @@ public class GomokuPOOSGUI extends JFrame {
 
 	private HashMap<String, ImageIcon> fichas = new HashMap<String, ImageIcon>();
 	
-
-	
 	//pantalla inicial
     private JLayeredPane pantallaInicial;
     private JButton inicio;
@@ -69,6 +67,8 @@ public class GomokuPOOSGUI extends JFrame {
     private JComboBox  colorJugador1;
     private JTextField  nombreJugador2;
     private JComboBox  colorJugador2;
+    private String color1;
+    private String color2;	
 	private JTextField nombreTablero;
 	private JTextField porcentajeCasillasEspeciales;
 	private JTextField porcentajePiedrasEspeciales;
@@ -88,21 +88,27 @@ public class GomokuPOOSGUI extends JFrame {
     private String nombreJugador2TEXTO;
     private String puntaje1;
     private String puntaje2;
+    private char fichaSeleccionada1;
+    private char fichaSeleccionada2;
     
+    //ficahsJugadores
+    private ImageIcon[] morado;
+    private ImageIcon[] blanco;
+    private ImageIcon[] rosa;
+    private ImageIcon[] negro;
+    private ImageIcon[] gris;
     
     
     
     
     public GomokuPOOSGUI() {
-    	fichas.put("p", createImageIcon("src/recursos/PESADANEGRA.png"));
-    	fichas.put("r", createImageIcon("recursos/PESADABLANCA.png"));
-    	
+
     	setTitle("GomokuPOOS");
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(new Dimension(dimension.width, dimension.height));
         setLocationRelativeTo(null);
+        paquetefichas();
     	prepareElements();
-    	
         prepareActions();
     }
     
@@ -111,18 +117,40 @@ public class GomokuPOOSGUI extends JFrame {
         GomokuPOOSGUI gomoku = new GomokuPOOSGUI();
         gomoku.setVisible(true);
     }
+    private void paquetefichas() {
+        negro = new ImageIcon[]{
+                createImageIcon("src/recursos/PESADANEGRA.png"),
+                createImageIcon("src/recursos/TEMPORALNEGRA.png"),
+                createImageIcon("src/recursos/NORMALNEGRA.png")
+        };
+        morado = new ImageIcon[]{
+                createImageIcon("src/recursos/PESADAMORADA.png"),
+                createImageIcon("src/recursos/TEMPORALMORADA.png"),
+                createImageIcon("src/recursos/NORMALMORADA.png")
+        };
+        rosa = new ImageIcon[]{
+                createImageIcon("src/recursos/PESADAROSADA.png"),
+                createImageIcon("src/recursos/TEMPORALROSADA.png"),
+                createImageIcon("src/recursos/NORMALROSADA.png")
+        };
+        blanco = new ImageIcon[]{
+                createImageIcon("src/recursos/PESADABLANCO.png"),
+                createImageIcon("src/recursos/TEMPORALBLANCO.png"),
+                createImageIcon("src/recursos/NORMALBLANCO.png")
+        };
+        gris = new ImageIcon[]{
+                createImageIcon("src/recursos/PESADAGRIS.png"),
+                createImageIcon("src/recursos/TEMPORALGRIS.png"),
+                createImageIcon("src/recursos/NORMALGRIS.png")
+        };
+    }
 
     protected ImageIcon createImageIcon(String path) {
-        URL imgURL = getClass().getResource(path);
-        if (imgURL != null) {
-               ImageIcon foto = new ImageIcon(imgURL);
-            int width = 40;
-            int height = 40;
-            Image fotod = foto.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-            return new ImageIcon(fotod);
-        } else {
-            return null;
-        }
+	    File archivoImagen = new File(path);
+        String rutaCompleta = archivoImagen.getAbsolutePath();
+        ImageIcon imagenIcono = new ImageIcon(rutaCompleta);
+        Image imagenEscalada = imagenIcono.getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH);
+        return new ImageIcon(imagenEscalada);
     }
     
     private void prepareElements() {
@@ -170,7 +198,6 @@ public class GomokuPOOSGUI extends JFrame {
         oyenteGuardarDetallesPartida = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	guardarInformacionPartidaPVSP();
-            	
                 getContentPane().removeAll();
                 nombreJugador1TEXTO = nombreJugador1.getText();
                 nombreJugador2TEXTO = nombreJugador2.getText();
@@ -195,9 +222,12 @@ public class GomokuPOOSGUI extends JFrame {
             	textotituloPantalla1.setBounds(getWidth()/20 + getWidth()/2-(getWidth()/20)-(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),0,getWidth(), getHeight()/4);
             	textotituloPantalla1.setFont(fuenteTitulo.deriveFont(Font.PLAIN, getWidth()/40f));
             	player2Informacion.add(textotituloPantalla1,BorderLayout.NORTH);
+            	color1 = (String) colorJugador1.getSelectedItem();
+            	prepareFichasJugador1();
                 getContentPane().add(pantallaTablero);
                 getContentPane().revalidate();
                 getContentPane().repaint();
+                
             }
         };
         inicioJuegoPvsP.addActionListener(oyenteGuardarDetallesPartida);
@@ -515,7 +545,7 @@ public class GomokuPOOSGUI extends JFrame {
 		colores.setBounds(getWidth()/20,0, getWidth()/20 , getHeight() / 16);
 		auxiliar2.add(colores);
 		
-	    String[] color = {"Blanco","Negro"};
+	    String[] color = {"Blanco","Negro","Rosa","Morado","Gris"};
 	    colorJugador1 = new JComboBox<>(color);
 	    colorJugador1.setFont(fuenteGeneral);
 	    colorJugador1.setPreferredSize(new Dimension(getWidth()/2 - getWidth()/6 , getHeight() / 16));
@@ -559,7 +589,7 @@ public class GomokuPOOSGUI extends JFrame {
 		colores.setBounds(getWidth()/20,0, getWidth()/20 , getHeight() / 16);
 		auxiliar2.add(colores);
 		
-	    String[] color = {"Blanco","Negro"};
+	    String[] color = {"Blanco","Negro","Rosa","Morado","Gris"};
 	    colorJugador1 = new JComboBox<>(color);
 	    colorJugador1.setFont(fuenteGeneral);
 	    colorJugador1.setPreferredSize(new Dimension(getWidth()/2 - getWidth()/6 , getHeight() / 16));
@@ -704,6 +734,15 @@ private void opcionesTablero2(JPanel todo) {
 	    for (int i = 0; i < m; i++) {
 	        for (int j = 0; j < m; j++) {
 	            tablero[i][j] = new JButton();
+	            JButton hola = tablero[i][j];
+	            tablero[i][j] = hola;
+	            tablero[i][j].addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        // Cambia la imagen al hacer clic
+                    	hola.setIcon(morado[2]);
+                    }
+                });
 	            //tablero[i][j].addActionListener(new BotonActionListener(i, j));
 	            tablero[i][j].setBackground(new Color(250, 240, 230));
 	            tableroGrafico.add(tablero[i][j]);
@@ -816,6 +855,46 @@ private void opcionesTablero2(JPanel todo) {
         } else if (result == JOptionPane.NO_OPTION) {
             setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         }
+    }
+    
+    private void prepareFichasJugador1() {
+    	JPanel fichasDisponibles = new JPanel();
+    	JButton pesada = new JButton();
+    	JButton normal = new JButton();
+    	JButton temporal = new JButton();
+    	pesada.setPreferredSize(new Dimension(80, 80));
+        temporal.setPreferredSize(new Dimension(80, 80));
+        normal.setPreferredSize(new Dimension(80, 80));
+    	if (color1.equals("Morado")){
+    		pesada.setIcon(morado[0]);
+    		normal.setIcon(morado[1]);
+    		temporal.setIcon(morado[2]);
+    	}else if (color1.equals("Negro")){
+    		pesada.setIcon(negro[0]);
+    		normal.setIcon(negro[1]);
+    		temporal.setIcon(negro[2]);
+    	}else if (color1.equals("Rosa")){
+    		pesada.setIcon(rosa[0]);
+    		normal.setIcon(rosa[1]);
+    		temporal.setIcon(rosa[2]);
+    	}else if (color1.equals("Blanco")){
+    		pesada.setIcon(blanco[0]);
+    		normal.setIcon(blanco[1]);
+    		temporal.setIcon(blanco[2]);
+    	}else {
+    		pesada.setIcon(gris[0]);
+    		normal.setIcon(gris[1]);
+    		temporal.setIcon(gris[2]);	
+    	}
+    	GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        fichasDisponibles.add(pesada,gbc);
+        gbc.gridx = 1;
+        fichasDisponibles.add(normal,gbc);
+        gbc.gridx = 2;
+        fichasDisponibles.add(temporal,gbc);
+        player1Informacion.add(fichasDisponibles,BorderLayout.CENTER);
     }
 }
 /**private class BotonActionListener implements ActionListener {
