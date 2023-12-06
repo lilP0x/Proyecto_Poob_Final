@@ -18,14 +18,35 @@ public class Board{
 	}
 	
 	public void play(int row, int column,String type, Color color) throws GomokuPOOSException{
-		
-			boxes[row][column].play(type,color);
-			
+		boxes[row][column].play(type,color);
+		if(boxes[row][column]instanceof Mine){
+			boxes[row][column].action(this);
+		}else if(boxes[row][column] instanceof Teleport){
+			boxes[row][column].action(this);
+		}else if(boxes[row][column] instanceof Golden){
+			boxes[row][column].action(this);
+		}else if(boxes[row][column] instanceof NormalBox){
+			boxes[row][column].action(this);
+		}
 		
 	}
 	
 	public Box[][] getTablero(){
 		return boxes;
+	}
+	
+	public char[][] getBoardWithSymbols() {
+	    char[][] symbols = new char[size][size];
+	    for (int i = 0; i < size; i++) {
+	        for (int j = 0; j < size; j++) {
+	            if (boxes[i][j] != null) {
+	                symbols[i][j] = boxes[i][j].getSymbol();
+	            } else{
+	                symbols[i][j] = '-';
+	            }
+	        }
+	    }
+	    return symbols;
 	}
 	
 	public int casillasEspeciales(double porcentaje) {
@@ -41,13 +62,24 @@ public class Board{
 	            if (boxes[i][j] != null && boxes[i][j].getFicha() != null) {
 	                piedras[i][j] = boxes[i][j].getType();
 	            } else {
-	                piedras[i][j] = '-'; // Puedes usar cualquier carácter que represente una ficha nula
+	                piedras[i][j] = '-'; 
 	            }
 	        }
 	    }
 	    return piedras;
 	}
 
+	public boolean isTemporary() {
+		boolean is = false;
+		for (int i = 0; i < size; i++) {
+	        for (int j = 0; j < size; j++) {
+	            	boxes[i][j].changeState();
+	            	is = true;
+	            } 
+	        }
+		return is;
+		}
+		
 	
 	
 	public int getSize () {
@@ -92,10 +124,13 @@ public class Board{
 	public void setCasillasEspeciales(int casillaEspecial, int posicionX, int posicionY) {
 	    if (casillaEspecial == 1) {
 	        boxes[posicionX][posicionY] = new Golden();
+	        //boxes[posicionX][posicionY].init(this);
 	    } else if (casillaEspecial == 2) {
 	        boxes[posicionX][posicionY] = new Mine();
+	        //boxes[posicionX][posicionY].init(this);
 	    } else if (casillaEspecial == 3) {
 	        boxes[posicionX][posicionY] = new Teleport();
+	        //boxes[posicionX][posicionY].init(this);
 	    }
 	}
 	
@@ -163,11 +198,11 @@ public class Board{
 		for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
             	if(boxes[i][j]== null) {
-            		boxes[i][j] = new NormalBox(); 
+            		boxes[i][j] = new NormalBox();}
+            		
             	}
             }
         }
 	}
 	
 
-}

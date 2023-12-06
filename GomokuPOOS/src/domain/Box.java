@@ -5,6 +5,8 @@ import java.lang.reflect.Constructor;
 
 public abstract class Box {
 	protected Ficha ficha;
+	protected Board tablero;
+	protected char type;
 	
 	public Box(){
 
@@ -19,20 +21,40 @@ public abstract class Box {
 			}else if(type.equals("Heavy")) {
 				ficha = new Heavy(color);
 			}
-			action();
-		}else {//throw new GomokuPOOSException(GomokuPOOSException.FICHA_ON_BOX);
+			//action();
+		}else {throw new GomokuPOOSException(GomokuPOOSException.FICHA_ON_BOX);
 		}
 		
+	}
+	
+	
+	public void setFicha(Ficha nuevaFicha) {
+        this.ficha = nuevaFicha;
+    }
+    
+	
+	 public void init(Board tablero) {
+	        this.tablero = tablero;
+	    }
+	
+	public void changeState() {
+		if(ficha instanceof Temporary) {
+			((Temporary) ficha).changeState();
+		}
 	}
 	
 	public Ficha getFicha() {
 		return ficha;
 	}
 	
+	public char getSymbol() {
+		return type;
+	}
+	
 	public char getType(){
 		return ficha.getType();
 	}
 	
-	public abstract void action();
+	public abstract void action(Board tablero);
 		
 }

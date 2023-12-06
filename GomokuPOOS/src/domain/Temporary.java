@@ -10,8 +10,13 @@ public class Temporary extends Ficha{
 		state = true;
 		this.type = 't';
 	}
+
 	
 	public boolean getState() {
 		return state;
+	}
+	
+	public void changeState() {
+		state = false;
 	}
 }

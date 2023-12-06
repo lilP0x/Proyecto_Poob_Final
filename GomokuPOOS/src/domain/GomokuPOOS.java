@@ -31,6 +31,14 @@ public class GomokuPOOS {
 			turn++;
 
 	}
+	
+	private boolean isTemporary() {
+		
+		return tablero.isTemporary();
+	}
+	
+	
+	
 	public boolean win() {
         if (tablero.win()) {
             return true;
@@ -89,6 +97,10 @@ public class GomokuPOOS {
 	
 	public char[][] getTablero(){
 		return tablero.getBoard();
+	}
+	
+	public char[][] getBoardWithSymbols(){
+		return tablero.getBoardWithSymbols();
 	}
 	
 	

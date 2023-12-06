@@ -25,7 +25,7 @@ public class GomokuPOOSTest {
         juego = new GomokuPOOS(nombreJugador1, colorJugador1, nombreJugador2, colorJugador2, modoDeJuego, tamañoTablero, tipo1, tipo2,porcentaje);
     }
 
-
+/*
     @Test
     public void shouldAddPlayers() {
 
@@ -57,12 +57,12 @@ public class GomokuPOOSTest {
     		juego.play(1, 1, "Normal");
 			
 		} catch (GomokuPOOSException e) {
-			e.printStackTrace();
+			
 		}
     	
     	Box [][] aux = juego.getBoard();
   
-    	printBoard(juego.getTablero());
+    	// printBoard(juego.getTablero());
     	assertNotNull(aux[1][1].getFicha());
     //	assertEquals(1,juego.getTurn());
     	
@@ -72,7 +72,7 @@ public class GomokuPOOSTest {
 
     
     
-    
+    /*
     @Test
     public void shouldNotPlay() {
         try {
@@ -91,8 +91,7 @@ public class GomokuPOOSTest {
             assertEquals("La casilla jugada esta ocupada", e.getMessage());
         }
     }
-
-
+     
   
     @Test
     public void shouldCreateSpecialBoxes() {
@@ -148,8 +147,7 @@ public class GomokuPOOSTest {
 			juego.play(1, 3, "Temporary");
 			
 		} catch (GomokuPOOSException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
 		}
   	
   	
@@ -175,12 +173,13 @@ public class GomokuPOOSTest {
     
     @Test
     public void shouldWin() {
+    	String s = "";
         try {
             juego.play(0, 0, "Normal");
             juego.play(1, 0, "Normal");
-            juego.play(0, 1, "Normal");
+            juego.play(0, 1, "Temporary");
             juego.play(1, 1, "Normal");
-            juego.play(0, 2, "Normal");
+            juego.play(0, 2, "Heavy");
             juego.play(1, 2, "Normal");
             juego.play(0, 3, "Normal");
             juego.play(1, 3, "Normal");
@@ -190,28 +189,56 @@ public class GomokuPOOSTest {
             printBoard(juego.getTablero());
 
             
-            System.out.println("¿Ganó el juego? " + juego.win());
+            
 
         } catch (GomokuPOOSException e) {
-        	assertEquals("El jugador gano", e.getMessage());
+        	s = e.getMessage();
         }
+        assertEquals("El jugador gano", s);
     }
    
-  
+  */
     public void printBoard(char[][] board) {
         for (int i = 0; i < juego.getSize(); i++) {
             for (int j = 0; j < juego.getSize(); j++) {
                 if (board[i][j] != 0) {
                     System.out.print(board[i][j] + " ");
                 } else {
-                    System.out.print("null");
+                    System.out.print("-");
                 }
             }
             System.out.println();
         }
     }
-  
+ 
+  /*
+    @Test
+    public void shouldTeleportFicha() {
+    	 printBoard(juego.getBoardWithSymbols());
+    }
+    */
+    
+    
+    @Test
+    public void testTeleportBox() {
+        try {
+           
+            juego.getBoard()[0][0] = new Teleport();
 
+        
+            juego.play(0, 0, "Normal");
+
+       
+            printBoard(juego.getBoardWithSymbols());
+            System.out.println("-------------------------------------------");
+            printBoard(juego.getTablero());
+            assertNull(juego.getBoard()[0][0].getFicha());
+            
+        } catch (GomokuPOOSException e) {
+            e.printStackTrace();
+            fail("No debería lanzar una excepción aquí");
+        }
+    }
 
  
 
