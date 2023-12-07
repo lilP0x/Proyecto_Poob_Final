@@ -4,11 +4,14 @@ import java.awt.Color;
 
 public class Temporary extends Ficha{
 	private boolean state;
+	private int cont;
+	
 	
 	public Temporary(Color color) {
 		super(color);
 		state = true;
 		this.type = 't';
+		cont = 0;
 	}
 
 	
@@ -19,6 +22,11 @@ public class Temporary extends Ficha{
 	public void changeState() {
 		state = false;
 	}
+	
+	public void changeCont() {
+		cont++;
+	}
+	
 	
 	
 }

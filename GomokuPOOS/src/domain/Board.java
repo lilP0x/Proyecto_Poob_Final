@@ -19,6 +19,8 @@ public class Board{
 	
 	public void play(int row, int column,String type, Color color) throws GomokuPOOSException{
 		boxes[row][column].play(type,color);
+		isTemporary();
+		removeTemporary();
 		if(boxes[row][column]instanceof Mine){
 			boxes[row][column].action(this);
 		}else if(boxes[row][column] instanceof Teleport){
@@ -71,15 +73,25 @@ public class Board{
 	    return piedras;
 	}
 
-	public boolean isTemporary() {
-		boolean is = false;
+	public void isTemporary() {
 		for (int i = 0; i < size; i++) {
 	        for (int j = 0; j < size; j++) {
-	            	boxes[i][j].changeState();
-	            	is = true;
+	        	if(boxes[i][j].getFicha() instanceof Temporary) {
+	            	boxes[i][j].changeCont();
+	            	
+	        		}
+	            } 
+			}
+		}
+	
+	public void removeTemporary() {
+		for (int i = 0; i < size; i++) {
+	        for (int j = 0; j < size; j++) {
+	        	if(boxes[i][j].getFicha() instanceof Temporary) {
+	            		boxes[i][j].removeTemporary();
+	        		}
 	            } 
 	        }
-		return is;
 		}
 		
 	

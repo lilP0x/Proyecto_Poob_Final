@@ -67,7 +67,7 @@ public class GomokuPOOSGUI extends JFrame {
     private JComboBox  colorJugador1;
     private JTextField  nombreJugador2;
     private JComboBox  colorJugador2;
-    private String color1;
+    private String color;
     private String color2;	
 	private JTextField nombreTablero;
 	private JTextField porcentajeCasillasEspeciales;
@@ -110,6 +110,7 @@ public class GomokuPOOSGUI extends JFrame {
         paquetefichas();
     	prepareElements();
         prepareActions();
+        
     }
     
     public static void main(String[] args) {
@@ -222,8 +223,9 @@ public class GomokuPOOSGUI extends JFrame {
             	textotituloPantalla1.setBounds(getWidth()/20 + getWidth()/2-(getWidth()/20)-(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),0,getWidth(), getHeight()/4);
             	textotituloPantalla1.setFont(fuenteTitulo.deriveFont(Font.PLAIN, getWidth()/40f));
             	player2Informacion.add(textotituloPantalla1,BorderLayout.NORTH);
-            	color1 = (String) colorJugador1.getSelectedItem();
-            	prepareFichasJugador1();
+            	color = (String) colorJugador1.getSelectedItem();
+            	
+                prepareFichasJugador1(color);
                 getContentPane().add(pantallaTablero);
                 getContentPane().revalidate();
                 getContentPane().repaint();
@@ -857,7 +859,7 @@ private void opcionesTablero2(JPanel todo) {
         }
     }
     
-    private void prepareFichasJugador1() {
+    private void prepareFichasJugador1(String color1) {
     	JPanel fichasDisponibles = new JPanel();
     	JButton pesada = new JButton();
     	JButton normal = new JButton();

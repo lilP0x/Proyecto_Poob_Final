@@ -57,6 +57,19 @@ public abstract class Box {
 		}
 	}
 	
+	public void changeCont() {
+		if(ficha instanceof Temporary) {
+			((Temporary) ficha).changeCont();
+		}
+	}
+	
+	public void removeTemporary() {
+		if(ficha instanceof Temporary && ficha.getCont() >= 3) {
+			setFicha(null);
+		}
+	}
+	
+	
 	public Ficha getFicha() {
 		return ficha;
 	}

@@ -32,9 +32,8 @@ public class GomokuPOOS {
 
 	}
 	
-	private boolean isTemporary() {
-		
-		return tablero.isTemporary();
+	private void isTemporary() {
+		tablero.isTemporary();
 	}
 	
 	
