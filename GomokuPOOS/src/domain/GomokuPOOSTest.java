@@ -248,10 +248,10 @@ public class GomokuPOOSTest {
             // Coloca fichas alrededor de la casilla Mine
             printBoard(juego.getTablero());
             System.out.println("-------------------------------------------");
-            juego.play(0, 0, "Normal");
-            juego.play(0, 1, "Normal");
+            //juego.play(0, 0, "Normal");
+            //juego.play(0, 1, "Normal");
             juego.play(0, 2, "Normal");
-            juego.play(1, 0, "Normal");
+            //juego.play(1, 0, "Normal");
             juego.play(1, 2, "Normal");
             juego.play(2, 0, "Normal");
             juego.play(2, 1, "Normal");

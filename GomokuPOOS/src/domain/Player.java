@@ -8,7 +8,8 @@ import java.util.*;
 public abstract class Player{
 	protected String name;
 	protected Color color;
-	protected ArrayList<Ficha> fichas = new ArrayList<>();  
+	protected ArrayList<Box> boxes = new ArrayList<>();
+	protected int cantidadfichas = 700;
 
 	public Player(String name,Color color){
 		this.name = name;

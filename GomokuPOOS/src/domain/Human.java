@@ -14,7 +14,13 @@ public class Human extends Player{
 
 	@Override
 	public void play(int row, int column, String type,Board tablero) throws GomokuPOOSException{
+		if(tablero.getBox(row,column)instanceof Golden) {
+			cantidadfichas = cantidadfichas+1;
+		}
 		tablero.play(row,column,type,color );
+		cantidadfichas = cantidadfichas-1;
+		boxes.add(tablero.getBox(row, column));
+		
 	}
 	
  }

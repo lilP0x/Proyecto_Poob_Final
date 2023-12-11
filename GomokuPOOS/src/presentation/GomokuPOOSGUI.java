@@ -1,12 +1,18 @@
-
+ 
 package presentation;
-
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.plaf.basic.BasicButtonUI;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.BorderLayout;
 import java.util.HashMap;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -22,6 +28,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -35,6 +42,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
+
+import domain.GomokuPOOS;
+import domain.GomokuPOOSException;
 public class GomokuPOOSGUI extends JFrame {
 	
 	//generales
@@ -45,8 +55,7 @@ public class GomokuPOOSGUI extends JFrame {
 	private Font fuenteBotones;
 	private Font fuenteGeneral;
 
-	private HashMap<String, ImageIcon> fichas = new HashMap<String, ImageIcon>();
-	
+
 	//pantalla inicial
     private JLayeredPane pantallaInicial;
     private JButton inicio;
@@ -67,13 +76,19 @@ public class GomokuPOOSGUI extends JFrame {
     private JComboBox  colorJugador1;
     private JTextField  nombreJugador2;
     private JComboBox  colorJugador2;
-    private String color;
+    private String color1;
     private String color2;	
 	private JTextField nombreTablero;
 	private JTextField porcentajeCasillasEspeciales;
 	private JTextField porcentajePiedrasEspeciales;
     private JComboBox  dimensionesTablero;
     private JComboBox  tipoJuego;
+    private String modoJuego;
+    private String tiempo;
+    private String numFichas;
+    private JTextField tiempoJuego;
+	private JTextField numeroFichas;
+	private JPanel todo;
     
     //pantalla tablero
     private JLayeredPane pantallaTablero;
@@ -90,13 +105,25 @@ public class GomokuPOOSGUI extends JFrame {
     private String puntaje2;
     private char fichaSeleccionada1;
     private char fichaSeleccionada2;
-    
+    private JButton pesadaJugador2 ;
+	private JButton normalJugador2;
+	private JButton temporalJugador2;
+	private JButton pesadaJugador1;
+	private JButton normalJugador1;
+	private JButton temporalJugador1;
+	
     //ficahsJugadores
-    private ImageIcon[] morado;
-    private ImageIcon[] blanco;
-    private ImageIcon[] rosa;
-    private ImageIcon[] negro;
-    private ImageIcon[] gris;
+	private HashMap<Character, ImageIcon> negroMap;
+	private HashMap<Character, ImageIcon> moradoMap;
+	private HashMap<Character, ImageIcon> rosaMap;
+	private HashMap<Character, ImageIcon> blancoMap;
+	private HashMap<Character, ImageIcon> grisMap;
+    
+    //jueguito
+    
+    private GomokuPOOS juego;
+    private ImageIcon fichaSeleccionadaJugar;
+    private String tipoFichaJugado;
     
     
     
@@ -110,6 +137,8 @@ public class GomokuPOOSGUI extends JFrame {
         paquetefichas();
     	prepareElements();
         prepareActions();
+        juego = new GomokuPOOS(nombreJugador1TEXTO,Color.BLACK,nombreJugador2TEXTO,Color.MAGENTA,"Normal",10,"Human","Human",0.3);
+     
         
     }
     
@@ -119,40 +148,32 @@ public class GomokuPOOSGUI extends JFrame {
         gomoku.setVisible(true);
     }
     private void paquetefichas() {
-        negro = new ImageIcon[]{
-                createImageIcon("src/recursos/PESADANEGRA.png"),
-                createImageIcon("src/recursos/TEMPORALNEGRA.png"),
-                createImageIcon("src/recursos/NORMALNEGRA.png")
-        };
-        morado = new ImageIcon[]{
-                createImageIcon("src/recursos/PESADAMORADA.png"),
-                createImageIcon("src/recursos/TEMPORALMORADA.png"),
-                createImageIcon("src/recursos/NORMALMORADA.png")
-        };
-        rosa = new ImageIcon[]{
-                createImageIcon("src/recursos/PESADAROSADA.png"),
-                createImageIcon("src/recursos/TEMPORALROSADA.png"),
-                createImageIcon("src/recursos/NORMALROSADA.png")
-        };
-        blanco = new ImageIcon[]{
-                createImageIcon("src/recursos/PESADABLANCO.png"),
-                createImageIcon("src/recursos/TEMPORALBLANCO.png"),
-                createImageIcon("src/recursos/NORMALBLANCO.png")
-        };
-        gris = new ImageIcon[]{
-                createImageIcon("src/recursos/PESADAGRIS.png"),
-                createImageIcon("src/recursos/TEMPORALGRIS.png"),
-                createImageIcon("src/recursos/NORMALGRIS.png")
-        };
+        negroMap = new HashMap<>();
+        moradoMap = new HashMap<>();
+        rosaMap = new HashMap<>();
+        blancoMap = new HashMap<>();
+        grisMap = new HashMap<>();
+        asignarFichas(negroMap, "NEGRA");
+        asignarFichas(moradoMap, "MORADA");
+        asignarFichas(rosaMap, "ROSADA");
+        asignarFichas(blancoMap, "BLANCA");
+        asignarFichas(grisMap, "GRIS");
+    }
+    private void asignarFichas(HashMap<Character, ImageIcon> colores, String color1) {
+        colores.put('p', createImageIcon("src/recursos/PESADA" + color1.toUpperCase() + ".png"));
+        colores.put('t', createImageIcon("src/recursos/TEMPORAL" + color1.toUpperCase() + ".png"));
+        colores.put('n', createImageIcon("src/recursos/NORMAL" + color1.toUpperCase() + ".png"));
     }
 
-    protected ImageIcon createImageIcon(String path) {
+    private ImageIcon createImageIcon(String path) {
 	    File archivoImagen = new File(path);
         String rutaCompleta = archivoImagen.getAbsolutePath();
         ImageIcon imagenIcono = new ImageIcon(rutaCompleta);
-        Image imagenEscalada = imagenIcono.getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH);
+        Image imagenEscalada = imagenIcono.getImage().getScaledInstance(75,75,Image.SCALE_SMOOTH);
         return new ImageIcon(imagenEscalada);
     }
+    
+    
     
     private void prepareElements() {
     	fuenteTitulo();
@@ -194,6 +215,35 @@ public class GomokuPOOSGUI extends JFrame {
         playerVSplayer.addActionListener(oyenteModoJuegoPVSP);
     }
     
+
+    
+    private void nombresPantalla(String nombreJugador1TEXTO,String nombreJugador2TEXTO,String nombreTableroTEXTO) {
+        JLabel textoTablero = new JLabel();
+        textoTablero.setText(nombreTableroTEXTO);
+        textoTablero.setBackground(Color.WHITE);
+        Font ff = fuenteTitulo.deriveFont(Font.PLAIN, getWidth()/45f);
+        textoTablero.setFont(ff);
+        textoTablero.setBounds(getWidth()/2 + getWidth()/10,0,getWidth(), getHeight()/4);
+        pantallaTablero.add(textoTablero, Integer.valueOf(2));
+        JLabel textotituloPantalla = new JLabel();
+    	textotituloPantalla.setText(nombreJugador1TEXTO);
+    	textotituloPantalla.setHorizontalAlignment(SwingConstants.CENTER);
+    	textotituloPantalla.setVerticalAlignment(SwingConstants.BOTTOM);
+    	textotituloPantalla.setBounds(getWidth()/20 + getWidth()/2-(getWidth()/20)-(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),0,getWidth(), getHeight()/4);
+    	textotituloPantalla.setFont(fuenteTitulo.deriveFont(Font.PLAIN, getWidth()/40f));
+    	player1Informacion.add(textotituloPantalla,BorderLayout.NORTH);
+    	JLabel textotituloPantalla1 = new JLabel();
+    	textotituloPantalla1.setText(nombreJugador2TEXTO);
+    	textotituloPantalla1.setHorizontalAlignment(SwingConstants.CENTER);
+    	textotituloPantalla1.setVerticalAlignment(SwingConstants.BOTTOM);
+    	textotituloPantalla1.setBounds(getWidth()/20 + getWidth()/2-(getWidth()/20)-(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),0,getWidth(), getHeight()/4);
+    	textotituloPantalla1.setFont(fuenteTitulo.deriveFont(Font.PLAIN, getWidth()/40f));
+    	player2Informacion.add(textotituloPantalla1,BorderLayout.NORTH);
+    }
+
+    private void preguntaCaracteristicasEspecisles() {
+    	
+    }
     private void funcionalidadesBotonesDEtallePartidaPVSP() {
     	ActionListener oyenteGuardarDetallesPartida;
         oyenteGuardarDetallesPartida = new ActionListener() {
@@ -202,33 +252,27 @@ public class GomokuPOOSGUI extends JFrame {
                 getContentPane().removeAll();
                 nombreJugador1TEXTO = nombreJugador1.getText();
                 nombreJugador2TEXTO = nombreJugador2.getText();
-                JLabel textoTablero = new JLabel();
-                textoTablero.setText(nombreTableroTEXTO);
-                textoTablero.setBackground(Color.WHITE);
-                Font ff = fuenteTitulo.deriveFont(Font.PLAIN, getWidth()/45f);
-                textoTablero.setFont(ff);
-                textoTablero.setBounds(getWidth()/2 + getWidth()/10,0,getWidth(), getHeight()/4);
-                pantallaTablero.add(textoTablero, Integer.valueOf(2));
-                JLabel textotituloPantalla = new JLabel();
-            	textotituloPantalla.setText(nombreJugador1TEXTO);
-            	textotituloPantalla.setHorizontalAlignment(SwingConstants.CENTER);
-            	textotituloPantalla.setVerticalAlignment(SwingConstants.BOTTOM);
-            	textotituloPantalla.setBounds(getWidth()/20 + getWidth()/2-(getWidth()/20)-(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),0,getWidth(), getHeight()/4);
-            	textotituloPantalla.setFont(fuenteTitulo.deriveFont(Font.PLAIN, getWidth()/40f));
-            	player1Informacion.add(textotituloPantalla,BorderLayout.NORTH);
-            	JLabel textotituloPantalla1 = new JLabel();
-            	textotituloPantalla1.setText(nombreJugador2TEXTO);
-            	textotituloPantalla1.setHorizontalAlignment(SwingConstants.CENTER);
-            	textotituloPantalla1.setVerticalAlignment(SwingConstants.BOTTOM);
-            	textotituloPantalla1.setBounds(getWidth()/20 + getWidth()/2-(getWidth()/20)-(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),0,getWidth(), getHeight()/4);
-            	textotituloPantalla1.setFont(fuenteTitulo.deriveFont(Font.PLAIN, getWidth()/40f));
-            	player2Informacion.add(textotituloPantalla1,BorderLayout.NORTH);
-            	color = (String) colorJugador1.getSelectedItem();
-            	
-                prepareFichasJugador1(color);
+                nombreTableroTEXTO = nombreTablero.getText();
+                nombresPantalla(nombreJugador1TEXTO,nombreJugador2TEXTO, nombreTableroTEXTO);
+            	color1 = (String) colorJugador1.getSelectedItem();
+            	color2 = (String) colorJugador2.getSelectedItem();
+            	String modo = (String) tipoJuego.getSelectedItem();
+            	String especial = null;
+            	if(modo.equals("Fichas limitadas")) {
+            		especial = numeroFichas.getText();
+            		System.out.println(especial);
+            	}else if (modo.equals("Quicktime")){
+            		especial = tiempoJuego.getText();
+            	}
+                prepareFichasJugador1(color1);
+                prepareFichasJugador2(color2);
+                System.out.println(tipoFichaJugado);
                 getContentPane().add(pantallaTablero);
                 getContentPane().revalidate();
                 getContentPane().repaint();
+                prepareActionFichasJugador2();
+                prepareActionFichasJugador1();
+                
                 
             }
         };
@@ -494,7 +538,7 @@ public class GomokuPOOSGUI extends JFrame {
     	player2.setLayout(new BorderLayout());
     	player2.setBorder(BorderFactory.createLineBorder(new Color(255,20,147)));
     	
-    	JPanel todo = new JPanel();
+    	todo = new JPanel();
     	todo.setBackground(new Color(254,180,203,0));
     	detalleTableroNombre(todo); 
     	detalleTablerodimension(todo);
@@ -591,11 +635,11 @@ public class GomokuPOOSGUI extends JFrame {
 		colores.setBounds(getWidth()/20,0, getWidth()/20 , getHeight() / 16);
 		auxiliar2.add(colores);
 		
-	    String[] color = {"Blanco","Negro","Rosa","Morado","Gris"};
-	    colorJugador1 = new JComboBox<>(color);
-	    colorJugador1.setFont(fuenteGeneral);
-	    colorJugador1.setPreferredSize(new Dimension(getWidth()/2 - getWidth()/6 , getHeight() / 16));
-	    auxiliar2.add(colorJugador1);
+	    String[] color = {"Seleccione un color","Blanco","Negro","Rosa","Morado","Gris"};
+	    colorJugador2 = new JComboBox<>(color);
+	    colorJugador2.setFont(fuenteGeneral);
+	    colorJugador2.setPreferredSize(new Dimension(getWidth()/2 - getWidth()/6 , getHeight() / 16));
+	    auxiliar2.add(colorJugador2);
 	    player2.add(auxiliar2,BorderLayout.SOUTH);
     }
     private void detalleTableroNombre(JPanel todo) {
@@ -609,16 +653,16 @@ public class GomokuPOOSGUI extends JFrame {
     	nombre.setFont(fuenteGeneral);
     	nombre.setBounds(getWidth()/20,0, getWidth()/20 , getHeight() / 16);
     	auxiliar1.add(nombre);
-    	
     	nombreTablero = new JTextField(30);
     	nombreTablero.setFont(fuenteGeneral);
     	nombreTablero.setBounds(getWidth()/20 +  getHeight() / 16,0, getWidth()/3 - getWidth()/6 , getHeight() / 16);
     	auxiliar1.add(nombreTablero);
-    	
         gbc.gridx = 0;
         gbc.gridy = 0;
         todo.add(auxiliar1,gbc);
     }
+    
+    
     private void detalleTablerodimension(JPanel todo) {
     	
 	    JPanel auxiliar2 = new JPanel();
@@ -651,13 +695,11 @@ public class GomokuPOOSGUI extends JFrame {
 		modo.setFont(fuenteGeneral);
 		modo.setBounds(getWidth()/20,0, getWidth()/20 , getHeight() / 16);
 		auxiliar3.add(modo);
-		
 	    String[] modos = {"Normal", "Fichas limitadas","Quicktime"};
 	    tipoJuego = new JComboBox<>(modos);
 	    tipoJuego.setFont(fuenteGeneral);
 	    tipoJuego.setPreferredSize(new Dimension(getWidth()/2 - getWidth()/6 , getHeight() / 16));
 	    auxiliar3.add(tipoJuego);
-
 	    gbc.gridx = 0;
 	    gbc.gridy = 2;
 	    todo.add(auxiliar3,gbc);
@@ -701,6 +743,26 @@ private void opcionesTablero2(JPanel todo) {
         todo.add(auxiliar5,gbc);
     }
 
+private void fechasLimit(JPanel todo) {
+	GridBagConstraints gbc = new GridBagConstraints();
+	JPanel auxiliar5 = new JPanel();
+	auxiliar5.setBounds(getWidth()/20, getHeight() / 5+( getHeight() / 45), getWidth()-(getWidth()/20)-(getWidth()/20), getHeight() / 3);
+	auxiliar5.setBackground(new Color(254,180,203,0));
+	JLabel pf = new JLabel("Numero de fichas para los jugadores:");
+	pf.setFont(fuenteGeneral);
+	pf.setBounds(getWidth()/20,0, getWidth()/20 , getHeight() / 16);
+	auxiliar5.add(pf);
+	
+	numeroFichas = new JTextField(18);
+	numeroFichas.setFont(fuenteGeneral);
+	numeroFichas.setBounds(getWidth()/20 +  getHeight() / 16,0, getWidth()/3 - getWidth()/6 , getHeight() / 16);
+	auxiliar5.add(numeroFichas);	  
+    gbc.gridx = 0;
+    gbc.gridy = 5;
+    todo.add(auxiliar5,gbc);
+	
+}
+
 //PANTALLA TABLERO
 		
 	private void preparePantallaDelTablero() {
@@ -735,24 +797,35 @@ private void opcionesTablero2(JPanel todo) {
 	    int m = 10;
 	    for (int i = 0; i < m; i++) {
 	        for (int j = 0; j < m; j++) {
+	            final int fila = i;  // Crear variable final para almacenar el valor de i
+	            final int columna = j;  // Crear variable final para almacenar el valor de j
+
 	            tablero[i][j] = new JButton();
 	            JButton hola = tablero[i][j];
 	            tablero[i][j] = hola;
 	            tablero[i][j].addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        // Cambia la imagen al hacer clic
-                    	hola.setIcon(morado[2]);
-                    }
-                });
-	            //tablero[i][j].addActionListener(new BotonActionListener(i, j));
+	                int auxX = fila;
+	                int auxY = columna;  // Usar la variable final en lugar de j
+
+	                @Override
+	                public void actionPerformed(ActionEvent e) {
+	                    // Cambia la imagen al hacer clic
+	                    try {
+	                        juego.play(fila, columna, tipoFichaJugado);  // Usar fila y columna en lugar de i y j
+	                        char[][] aux = juego.getTablero();
+	                       // hola.setIcon(aux[fila][columna]);
+	                    } catch (GomokuPOOSException e1) {
+	                        e1.printStackTrace();
+	                    }
+	                }
+	            });
 	            tablero[i][j].setBackground(new Color(250, 240, 230));
 	            tableroGrafico.add(tablero[i][j]);
 	        }
 	    }
-
-	    
 	}
+
+
 	
 	private void player1Partida() {
 		player1Informacion = new JPanel();
@@ -796,10 +869,7 @@ private void opcionesTablero2(JPanel todo) {
         pantallaTablero.add(salirJuego, Integer.valueOf(2));
         pantallaTablero.add(reiniciarJuego, Integer.valueOf(2));
     }
-	
-	private void textosFijosTablero() {
-		
-	}
+
 	
 	private void puntajeJuagadores() {
 		puntaje1 = "0";
@@ -813,16 +883,7 @@ private void opcionesTablero2(JPanel todo) {
 		player1Informacion.add(puntajepersona1, BorderLayout.SOUTH);
 		player2Informacion.add(puntajepersona2,BorderLayout.SOUTH);
 	}
-	
 
-    
-	
-    private void actualizarDimensiones() {
-
-    	prepareElements();
-        revalidate();
-        repaint();
-    }
     
     private void prepareActions() {
         /**addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -838,11 +899,180 @@ private void opcionesTablero2(JPanel todo) {
             }
         };
         this.addWindowListener(oyenteDeSalidaW);
-
+        
+        ActionListener oyenteModoJuego;
+		oyenteModoJuego = new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            String modo = (String) tipoJuego.getSelectedItem();
+	            GridBagConstraints gbc = new GridBagConstraints();
+	            gbc.gridx = 0;
+	            gbc.gridy = 5;
+	            JPanel auxiliar5 = new JPanel();
+	        	auxiliar5.setBounds(getWidth()/20, getHeight() / 5+( getHeight() / 45), getWidth()-(getWidth()/20)-(getWidth()/20), getHeight() / 3);
+	        	auxiliar5.setBackground(new Color(254,180,203,0));
+	        	auxiliar5.setName("opcion");
+	        	Component[] components = todo.getComponents();
+	        	for (Component component : components) {
+	        	    if (component.getName() != null && component.getName().equals("opcion")) {
+	        	        todo.remove(component);
+	        	    }
+	        	}
+	        	if(modo.equals("Fichas limitadas")) {
+	        		
+		        	JLabel pf = new JLabel("Numero de fichas para cada jugador:");
+		        	pf.setFont(fuenteGeneral);
+		        	pf.setBounds(getWidth()/20,0, getWidth()/20 , getHeight() / 16);
+		        	auxiliar5.add(pf);
+		        	numeroFichas = new JTextField(5);
+		        	numeroFichas.setFont(fuenteGeneral);
+		        	numeroFichas.setBounds(getWidth()/20 +  getHeight() / 16,0, getWidth()/3 - getWidth()/6 , getHeight() / 16);
+		        	auxiliar5.add(numeroFichas);
+		        	
+	        	}else if (modo.equals("Quicktime")) {
+	        		
+	        		JLabel pf = new JLabel("Tiempo de la partida:");
+		        	pf.setFont(fuenteGeneral);
+		        	pf.setBounds(getWidth()/20,0, getWidth()/20 , getHeight() / 16);
+		        	auxiliar5.add(pf);
+		        	tiempoJuego = new JTextField(10);
+		        	tiempoJuego.setFont(fuenteGeneral);
+		        	tiempoJuego.setBounds(getWidth()/20 +  getHeight() / 16,0, getWidth()/3 - getWidth()/6 , getHeight() / 16);
+		        	auxiliar5.add(tiempoJuego);
+	        	}
+	        	todo.add(auxiliar5,gbc);
+	            revalidate(); 
+	            repaint();
+	        }
+	    };
+	    tipoJuego.addActionListener(oyenteModoJuego);
+	    verificacionCasillaEspecial();
+	    verificacionPiedrasEspecial();
+	    verificacionNombreJugador1();
+	    verificacionNombreJugador2();
+	    verificacionNombreTablero();
+	    
+	   
     }
-
     
-    	
+    private void prepareActionFichasJugador1()  {
+   	 ActionListener oyentePesadaJugador1 ;
+   	 oyentePesadaJugador1 = new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	        	seleccionFicha(pesadaJugador1, "Heavy");
+	        }
+	    };
+	    pesadaJugador1.addActionListener(oyentePesadaJugador1 );	
+	 ActionListener oyenteTemporalJugador1 ;
+	 oyenteTemporalJugador1 = new ActionListener() {
+		        public void actionPerformed(ActionEvent e) {
+		        	seleccionFicha(temporalJugador1, "Temporary");
+		        }
+		    };
+		temporalJugador1.addActionListener(oyenteTemporalJugador1 );	
+	 ActionListener oyenteNormalJugador1 ;
+	 oyenteNormalJugador1 = new ActionListener() {
+	 public void actionPerformed(ActionEvent e) {
+		        	seleccionFicha(normalJugador1, "Normal");
+		        }
+		    };
+		normalJugador1.addActionListener(oyenteNormalJugador1 );	
+    }
+    private void prepareActionFichasJugador2() {
+	   	 ActionListener oyentePesadaJugador2 ;
+	   	 oyentePesadaJugador2 = new ActionListener() {
+		        public void actionPerformed(ActionEvent e) {
+		        	seleccionFicha(pesadaJugador2, "Heavy");
+		        }
+		    };
+		    pesadaJugador2.addActionListener(oyentePesadaJugador2 );	
+		 ActionListener oyenteTemporalJugador2 ;
+		 oyenteTemporalJugador2 = new ActionListener() {
+			        public void actionPerformed(ActionEvent e) {
+			        	seleccionFicha(temporalJugador2, "Temporary");
+			        }
+			    };
+			temporalJugador2.addActionListener(oyenteTemporalJugador2 );	
+		 ActionListener oyenteNormalJugador2 ;
+		 oyenteNormalJugador2 = new ActionListener() {
+		 public void actionPerformed(ActionEvent e) {
+			        	seleccionFicha(normalJugador2, "Normal");
+			        }
+			    };
+			normalJugador2.addActionListener(oyenteNormalJugador2 );	
+	}
+    
+    private void seleccionFicha(JButton boton, String tipo) {
+    	fichaSeleccionadaJugar =  (ImageIcon) boton.getIcon();
+        tipoFichaJugado = tipo;
+        //System.out.println(tipoFichaJugado);
+    }
+    
+    private void verificacionCasillaEspecial() {
+        porcentajeCasillasEspeciales.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                String piedraEspecial = porcentajeCasillasEspeciales.getText();
+                try {
+                    float especialCasilla = Float.parseFloat(piedraEspecial);
+                } catch (NumberFormatException me) {
+                    porcentajeCasillasEspeciales.setText("");
+                    JOptionPane.showMessageDialog(null, "Error: El porcentaje de casillas especiales no es válido", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+    }
+    private void verificacionPiedrasEspecial() {
+        porcentajePiedrasEspeciales.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                String casillaEspecial = porcentajePiedrasEspeciales.getText();
+                try {
+                    float especialPiedras = Float.parseFloat(casillaEspecial);
+                } catch (NumberFormatException me) {
+                    porcentajePiedrasEspeciales.setText("");
+                    JOptionPane.showMessageDialog(null, "Error: El porcentaje de piedras especiales no es válido", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+    }
+    
+    private void verificacionNombreJugador1() {
+        nombreJugador1.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                String nombrejugador = nombreJugador1.getText();
+                if(nombrejugador.equals("")) {
+                    JOptionPane.showMessageDialog(null, "Error: El nombre del player 1 es nulo", "Error", JOptionPane.ERROR_MESSAGE);
+                } 
+               
+            }
+        });
+    }
+    private void verificacionNombreJugador2() {
+        nombreJugador2.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                String nombrejugador = nombreJugador2.getText();
+                if(nombrejugador.equals("")) {
+                    JOptionPane.showMessageDialog(null, "Error: El nombre del player 2 es nulo", "Error", JOptionPane.ERROR_MESSAGE);
+                } 
+               
+            }
+        });
+    }
+ 
+    private void verificacionNombreTablero() {
+        nombreTablero.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                String nombretablero = nombreTablero.getText();
+                if(nombretablero.equals("")) {
+                    JOptionPane.showMessageDialog(null, "Error: El nombre del tablero es nulo", "Error", JOptionPane.ERROR_MESSAGE);
+                } 
+               
+            }
+        });
+    }
     private void guardarInformacionPartidaPVSP() {
     	nombreTableroTEXTO = nombreTablero.getText();
     	nombreJugador1TEXTO = nombreJugador1.getText();
@@ -857,48 +1087,88 @@ private void opcionesTablero2(JPanel todo) {
         } else if (result == JOptionPane.NO_OPTION) {
             setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         }
+     
     }
-    
-    private void prepareFichasJugador1(String color1) {
-    	JPanel fichasDisponibles = new JPanel();
-    	JButton pesada = new JButton();
-    	JButton normal = new JButton();
-    	JButton temporal = new JButton();
+    private JButton[] colors(String color1, JButton pesada,JButton temporal,JButton normal) {
+    	pesada.setBackground(new Color(254,180,203,85));
+    	temporal.setBackground(new Color(254,180,203,85));
+    	normal.setBackground(new Color(254,180,203,85));
     	pesada.setPreferredSize(new Dimension(80, 80));
         temporal.setPreferredSize(new Dimension(80, 80));
         normal.setPreferredSize(new Dimension(80, 80));
     	if (color1.equals("Morado")){
-    		pesada.setIcon(morado[0]);
-    		normal.setIcon(morado[1]);
-    		temporal.setIcon(morado[2]);
+    		pesada.setIcon(moradoMap.get('p'));
+    		normal.setIcon(moradoMap.get('n'));
+    		temporal.setIcon(moradoMap.get('t'));
     	}else if (color1.equals("Negro")){
-    		pesada.setIcon(negro[0]);
-    		normal.setIcon(negro[1]);
-    		temporal.setIcon(negro[2]);
+    		pesada.setIcon(negroMap.get('p'));
+    		normal.setIcon(negroMap.get('n'));
+    		temporal.setIcon(negroMap.get('t'));
     	}else if (color1.equals("Rosa")){
-    		pesada.setIcon(rosa[0]);
-    		normal.setIcon(rosa[1]);
-    		temporal.setIcon(rosa[2]);
+    		pesada.setIcon(rosaMap.get('p'));
+    		normal.setIcon(rosaMap.get('n'));
+    		temporal.setIcon(rosaMap.get('t'));
     	}else if (color1.equals("Blanco")){
-    		pesada.setIcon(blanco[0]);
-    		normal.setIcon(blanco[1]);
-    		temporal.setIcon(blanco[2]);
+        	pesada.setIcon(blancoMap.get('p'));
+        	normal.setIcon(blancoMap.get('n'));
+        	temporal.setIcon(blancoMap.get('t'));
     	}else {
-    		pesada.setIcon(gris[0]);
-    		normal.setIcon(gris[1]);
-    		temporal.setIcon(gris[2]);	
+    		pesada.setIcon(grisMap.get('p'));
+    		normal.setIcon(grisMap.get('n'));
+    		temporal.setIcon(grisMap.get('t'));	
     	}
+    	return new JButton[]{pesada, temporal, normal};
+    }
+    
+    private void prepareFichasJugador1(String color1) {
+    	JPanel fichasDisponibles = new JPanel();
+    	pesadaJugador1 = new JButton();
+    	normalJugador1 = new JButton();
+    	temporalJugador1 = new JButton();
+    	pesadaJugador1 = colors(color1,pesadaJugador1,temporalJugador1,normalJugador1)[0];
+    	normalJugador1 = colors(color1,pesadaJugador1,temporalJugador1,normalJugador1)[2];
+    	temporalJugador1 = colors(color1,pesadaJugador1,temporalJugador1,normalJugador1)[1];
+    
     	GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        fichasDisponibles.add(pesada,gbc);
-        gbc.gridx = 1;
-        fichasDisponibles.add(normal,gbc);
+        fichasDisponibles.add(pesadaJugador1,gbc);
         gbc.gridx = 2;
-        fichasDisponibles.add(temporal,gbc);
+        fichasDisponibles.add(normalJugador1,gbc);
+        gbc.gridx = 1;
+        fichasDisponibles.add(temporalJugador1,gbc);
+        fichasDisponibles.setBackground(new Color(15,15,15,0));
         player1Informacion.add(fichasDisponibles,BorderLayout.CENTER);
+
     }
+    
+    private void prepareFichasJugador2(String color1) {
+    	JPanel fichasDisponibles = new JPanel();
+    	pesadaJugador2 = new JButton();
+    	normalJugador2 = new JButton();
+    	temporalJugador2 = new JButton();
+    	pesadaJugador2.setPreferredSize(new Dimension(80, 80));
+        temporalJugador2.setPreferredSize(new Dimension(80, 80));
+        normalJugador2.setPreferredSize(new Dimension(80, 80));
+        pesadaJugador2 = colors(color1,pesadaJugador2,temporalJugador2,normalJugador2)[0];
+    	normalJugador2 = colors(color1,pesadaJugador2,temporalJugador2,normalJugador2)[2];
+    	temporalJugador2 = colors(color1,pesadaJugador2,temporalJugador2,normalJugador2)[1];
+
+    	GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        fichasDisponibles.add(pesadaJugador2,gbc);
+        gbc.gridx = 1;
+        fichasDisponibles.add(normalJugador2,gbc);
+        gbc.gridx = 2;
+        fichasDisponibles.add(temporalJugador2,gbc);
+        fichasDisponibles.setBackground(new Color(15,15,15,0));
+        player2Informacion.add(fichasDisponibles,BorderLayout.CENTER);
+
+    }
+    
 }
+
 /**private class BotonActionListener implements ActionListener {
     private int fila;
     private int columna;
@@ -913,5 +1183,7 @@ private void opcionesTablero2(JPanel todo) {
         
     }
 }*/
+
+
 
 
