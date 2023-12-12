@@ -45,6 +45,10 @@ public abstract class Box {
 	public void setFicha(Ficha nuevaFicha) {
         this.ficha = nuevaFicha;
     }
+	
+
+
+	public abstract Box copyBox();
     
 	
 	 public void init(Board tablero) {

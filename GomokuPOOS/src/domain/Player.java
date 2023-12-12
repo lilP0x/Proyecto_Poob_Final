@@ -8,12 +8,13 @@ import java.util.*;
 public abstract class Player{
 	protected String name;
 	protected Color color;
-	protected ArrayList<Box> boxes = new ArrayList<>();
+	protected Board boxes; 
 	protected int cantidadfichas = 700;
 
-	public Player(String name,Color color){
+	public Player(String name,Color color,int size){
 		this.name = name;
 		this.color = color;
+		this.boxes = new Box[size][size];
 	}
 	
 	public abstract void play(int row,int column,String type,Board tablero) throws GomokuPOOSException;
@@ -25,6 +26,10 @@ public abstract class Player{
 	
 	public Color getColor() {
 		return color;
+	}
+	
+	public Box[][] getPlayerFichas(){
+		return boxes;
 	}
 }
 

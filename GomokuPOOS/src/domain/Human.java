@@ -4,11 +4,11 @@ import java.awt.Color;
 import java.lang.reflect.Constructor;
 
 public class Human extends Player{
-
-	public Human(String name, Color color) {
-		super(name, color);
+	
+	public Human(String name, Color color,int size) {
+		super(name, color,size);
 		this.color = color;
-		
+		this.boxes = new Box[size][size];
 	}
 	
 
@@ -19,9 +19,13 @@ public class Human extends Player{
 		}
 		tablero.play(row,column,type,color );
 		cantidadfichas = cantidadfichas-1;
-		boxes.add(tablero.getBox(row, column));
+		boxes = tablero.copyBoard();
+		boxes[row][column].play(type,color);
+		//boxes.add(tablero.getBox(row, column));
 		
 	}
+	
+
 	
  }
 	

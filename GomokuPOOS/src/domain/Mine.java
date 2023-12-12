@@ -29,8 +29,16 @@ public class Mine extends Box {
                 tablero.getBox(filaSuperior, columnaDerecha).setFicha(null);
             }
         }
-
     }
+        
+        
+            @Override
+            public Box copyBox() {
+                Mine copiedBox = new Mine();
+                // Copiar atributos específicos de Teleport si los hay
+                return copiedBox;
+	            
+	    }
 
 
         

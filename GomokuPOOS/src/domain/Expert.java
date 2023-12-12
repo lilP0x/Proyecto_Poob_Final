@@ -4,8 +4,8 @@ import java.awt.Color;
 
 public class Expert extends Machine {
 
-	public Expert(String name, Color color) {
-		super(name, color);
+	public Expert(String name, Color color, int size) {
+		super(name, color, size);
 	}
 
 	@Override

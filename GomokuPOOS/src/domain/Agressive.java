@@ -4,8 +4,8 @@ import java.awt.Color;
 
 public class Agressive extends Machine{
 
-	public Agressive(String name, Color color) {
-		super(name, color);
+	public Agressive(String name, Color color, int size) {
+		super(name, color, size);
 	}
 
 	@Override

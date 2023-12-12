@@ -4,8 +4,8 @@ import java.awt.Color;
 
 public class Fearful extends Machine {
 
-	public Fearful(String name, Color color) {
-		super(name, color);
+	public Fearful(String name, Color color, int size) {
+		super(name, color,size);
 		// TODO Auto-generated constructor stub
 	}
 

@@ -17,6 +17,7 @@ public class Board{
 		
 	}
 	
+	
 	public void play(int row, int column,String type, Color color) throws GomokuPOOSException{
 		boxes[row][column].play(type,color);
 		isTemporary();
@@ -72,6 +73,9 @@ public class Board{
 	    }
 	    return piedras;
 	}
+	
+	
+	
 
 	public void isTemporary() {
 		for (int i = 0; i < size; i++) {
@@ -207,6 +211,24 @@ public class Board{
         }
         return true;
     }
+    
+    
+    public Board copyBoard() {
+        Board copiedBoard = new Board(size, 0.0); // 0.0 as the porcentaje for special tiles, you can adjust it accordingly
+        Box[][] copiedBoxes = new Box[size][size];
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (boxes[i][j] != null) {
+                    copiedBoxes[i][j] = boxes[i][j].copyBox(); // Assuming you have a copyBox method in the Box class
+                }
+            }
+        }
+
+        copiedBoard.boxes = copiedBoxes;
+        return copiedBoard;
+    }
+
 
 	
 	private void initializeBoxes(double porcentaje) {
