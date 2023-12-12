@@ -1,6 +1,8 @@
-  
+ 
 package presentation;
 import javax.swing.JButton;
+import javax.swing.Timer;
+
 import javax.swing.JFrame;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.Color;
@@ -118,7 +120,10 @@ public class GomokuPOOSGUI extends JFrame {
 	private HashMap<Character, ImageIcon> rosaMap;
 	private HashMap<Character, ImageIcon> blancoMap;
 	private HashMap<Character, ImageIcon> grisMap;
-    
+	private HashMap<Character, ImageIcon> jugador2Fichas;
+	private HashMap<Character, ImageIcon> jugador1Fichas;
+	//CasillasEspeciales
+	private HashMap<Character, Color> casillasReference;
     //jueguito
     
     private GomokuPOOS juego;
@@ -134,10 +139,10 @@ public class GomokuPOOSGUI extends JFrame {
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(new Dimension(dimension.width, dimension.height));
         setLocationRelativeTo(null);
-        paquetefichas();
+        paquetefichasyCasillas();
     	prepareElements();
         prepareActions();
-        juego = new GomokuPOOS(nombreJugador1TEXTO,Color.BLACK,nombreJugador2TEXTO,Color.MAGENTA,"Normal",10,"Human","Human",0.3);
+        juego = new GomokuPOOS(nombreJugador1TEXTO,"fg",nombreJugador2TEXTO,"fg","Normal",10,"Human","Human",0.3);
      
         
     }
@@ -147,20 +152,26 @@ public class GomokuPOOSGUI extends JFrame {
         GomokuPOOSGUI gomoku = new GomokuPOOSGUI();
         gomoku.setVisible(true);
     }
-    private void paquetefichas() {
+    private void paquetefichasyCasillas() {
+    	//realiza el insert de los tipos de casillas
+    	
         negroMap = new HashMap<>();
         moradoMap = new HashMap<>();
         rosaMap = new HashMap<>();
         blancoMap = new HashMap<>();
         grisMap = new HashMap<>();
+        casillasReference = new HashMap<>();
         asignarFichas(negroMap, "NEGRA");
         asignarFichas(moradoMap, "MORADA");
         asignarFichas(rosaMap, "ROSADA");
         asignarFichas(blancoMap, "BLANCA");
         asignarFichas(grisMap, "GRIS");
+        casillasReference.put('m',new Color(255,105,97));
+        casillasReference.put('t',new Color(255,128,0));
+        
     }
     private void asignarFichas(HashMap<Character, ImageIcon> colores, String color1) {
-        colores.put('p', createImageIcon("src/recursos/PESADA" + color1.toUpperCase() + ".png"));
+        colores.put('h', createImageIcon("src/recursos/PESADA" + color1.toUpperCase() + ".png"));
         colores.put('t', createImageIcon("src/recursos/TEMPORAL" + color1.toUpperCase() + ".png"));
         colores.put('n', createImageIcon("src/recursos/NORMAL" + color1.toUpperCase() + ".png"));
     }
@@ -266,7 +277,8 @@ public class GomokuPOOSGUI extends JFrame {
             	}
                 prepareFichasJugador1(color1);
                 prepareFichasJugador2(color2);
-                System.out.println(tipoFichaJugado);
+                fichasjugadores(color1);
+                fichasjugadores(color2);
                 getContentPane().add(pantallaTablero);
                 getContentPane().revalidate();
                 getContentPane().repaint();
@@ -797,25 +809,41 @@ private void fechasLimit(JPanel todo) {
 	    int m = 10;
 	    for (int i = 0; i < m; i++) {
 	        for (int j = 0; j < m; j++) {
-	            final int fila = i;  // Crear variable final para almacenar el valor de i
-	            final int columna = j;  // Crear variable final para almacenar el valor de j
-
+	            final int fila = i;  
+	            final int columna = j;  
 	            tablero[i][j] = new JButton();
 	            JButton hola = tablero[i][j];
-	            tablero[i][j] = hola;
+	            
 	            tablero[i][j].addActionListener(new ActionListener() {
 	                int auxX = fila;
-	                int auxY = columna;  // Usar la variable final en lugar de j
+	                int auxY = columna;  
 
 	                @Override
 	                public void actionPerformed(ActionEvent e) {
-	                    // Cambia la imagen al hacer clic
+	      
 	                    try {
-	                        juego.play(fila, columna, tipoFichaJugado);  // Usar fila y columna en lugar de i y j
-	                        char[][] aux = juego.getTablero();
-	                       // hola.setIcon(aux[fila][columna]);
+	                    	juego.play(fila, columna, tipoFichaJugado);
+	                        hola.setIcon(fichaSeleccionadaJugar);
+	                        fichaSeleccionadaJugar = null;
+	                        tipoFichaJugado = null;
+
+	                        // Usar un temporizador en lugar de Thread.sleep()
+	                        Timer timer = new Timer(500, new ActionListener() {
+	                            @Override
+	                            public void actionPerformed(ActionEvent arg0) {
+	                                refresh();
+	                                tableroGrafico.revalidate();
+	                                tableroGrafico.repaint();
+	                            }
+	                        });
+	                        
+	                        timer.setRepeats(false); // Hacer que el temporizador se ejecute solo una vez
+	                        timer.start();
+	                        
 	                    } catch (GomokuPOOSException e1) {
-	                        e1.printStackTrace();
+	                    	JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	                        
+	                        
 	                    }
 	                }
 	            });
@@ -825,7 +853,21 @@ private void fechasLimit(JPanel todo) {
 	    }
 	}
 
-
+    private void refresh() {
+    	char[][] colores = juego.colorsficha();
+    	char[][] tipo = juego.getTablero();
+    	for (int i = 0; i < 10; i++) {
+	        for (int j = 0; j < 10; j++) {
+	        	JButton hola = tablero[i][j];
+	            if (colores[i][j] == '1') {
+	                hola.setIcon(jugador1Fichas.get(tipo[i][j]));
+	            } else {
+	            	hola.setIcon(jugador2Fichas.get(tipo[i][j]));
+	            }
+	        }
+	    }
+    	
+    }
 	
 	private void player1Partida() {
 		player1Informacion = new JPanel();
@@ -886,12 +928,6 @@ private void fechasLimit(JPanel todo) {
 
     
     private void prepareActions() {
-        /**addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentResized(java.awt.event.ComponentEvent evt) {
-                actualizarDimensiones();
-            }
-        });*/
-
         WindowAdapter oyenteDeSalidaW;
         oyenteDeSalidaW = new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -1097,27 +1133,45 @@ private void fechasLimit(JPanel todo) {
         temporal.setPreferredSize(new Dimension(80, 80));
         normal.setPreferredSize(new Dimension(80, 80));
     	if (color1.equals("Morado")){
-    		pesada.setIcon(moradoMap.get('p'));
+    		pesada.setIcon(moradoMap.get('h'));
     		normal.setIcon(moradoMap.get('n'));
     		temporal.setIcon(moradoMap.get('t'));
     	}else if (color1.equals("Negro")){
-    		pesada.setIcon(negroMap.get('p'));
+    		pesada.setIcon(negroMap.get('h'));
     		normal.setIcon(negroMap.get('n'));
     		temporal.setIcon(negroMap.get('t'));
     	}else if (color1.equals("Rosa")){
-    		pesada.setIcon(rosaMap.get('p'));
+    		pesada.setIcon(rosaMap.get('h'));
     		normal.setIcon(rosaMap.get('n'));
     		temporal.setIcon(rosaMap.get('t'));
     	}else if (color1.equals("Blanco")){
-        	pesada.setIcon(blancoMap.get('p'));
+        	pesada.setIcon(blancoMap.get('h'));
         	normal.setIcon(blancoMap.get('n'));
         	temporal.setIcon(blancoMap.get('t'));
     	}else {
-    		pesada.setIcon(grisMap.get('p'));
+    		pesada.setIcon(grisMap.get('h'));
     		normal.setIcon(grisMap.get('n'));
     		temporal.setIcon(grisMap.get('t'));	
     	}
     	return new JButton[]{pesada, temporal, normal};
+    }
+    
+    private HashMap<Character, ImageIcon> fichasjugadores(String color1){
+    	HashMap<Character, ImageIcon> fichas;
+    	 
+    	if (color1.equals("Morado")){
+    		fichas = moradoMap;
+    	}else if (color1.equals("Negro")){
+    		fichas = negroMap;
+    	}else if (color1.equals("Rosa")){
+    		fichas = rosaMap;
+    	}else if (color1.equals("Blanco")){
+    		fichas = blancoMap;
+    	}else {
+    		fichas = grisMap;
+    	}
+    	
+    	return fichas;
     }
     
     private void prepareFichasJugador1(String color1) {
@@ -1128,6 +1182,8 @@ private void fechasLimit(JPanel todo) {
     	pesadaJugador1 = colors(color1,pesadaJugador1,temporalJugador1,normalJugador1)[0];
     	normalJugador1 = colors(color1,pesadaJugador1,temporalJugador1,normalJugador1)[2];
     	temporalJugador1 = colors(color1,pesadaJugador1,temporalJugador1,normalJugador1)[1];
+    	jugador1Fichas= fichasjugadores(color1);
+    	
     
     	GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -1153,7 +1209,7 @@ private void fechasLimit(JPanel todo) {
         pesadaJugador2 = colors(color1,pesadaJugador2,temporalJugador2,normalJugador2)[0];
     	normalJugador2 = colors(color1,pesadaJugador2,temporalJugador2,normalJugador2)[2];
     	temporalJugador2 = colors(color1,pesadaJugador2,temporalJugador2,normalJugador2)[1];
-
+    	jugador2Fichas= fichasjugadores(color1);
     	GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -1168,6 +1224,9 @@ private void fechasLimit(JPanel todo) {
     }
     
 }
+
+    
+
 
 /**private class BotonActionListener implements ActionListener {
     private int fila;

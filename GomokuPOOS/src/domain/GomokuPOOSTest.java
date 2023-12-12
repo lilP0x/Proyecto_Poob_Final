@@ -22,7 +22,7 @@ public class GomokuPOOSTest {
         double porcentaje = 0.2;
         String tipo1 = "Human";
         String tipo2 = "Human";
-        juego = new GomokuPOOS(nombreJugador1, colorJugador1, nombreJugador2, colorJugador2, modoDeJuego, tamañoTablero, tipo1, tipo2,porcentaje);
+        //juego = new GomokuPOOS(nombreJugador1, colorJugador1, nombreJugador2, colorJugador2, modoDeJuego, tamañoTablero, tipo1, tipo2,porcentaje);
     }
 /*
 
@@ -243,27 +243,25 @@ public class GomokuPOOSTest {
     public void testMineExplode() {
         try {
             // Agrega una casilla Mine en una ubicación específica
-            //juego.getBoard()[1][1] = new Mine();
+            juego.getBoard()[1][1] = new Mine();
             
             // Coloca fichas alrededor de la casilla Mine
             printBoard(juego.getTablero());
             System.out.println("-------------------------------------------");
-            //juego.play(0, 0, "Normal");
-            //juego.play(0, 1, "Normal");
+            juego.play(0, 0, "Normal");
+            juego.play(0, 1, "Normal");
             juego.play(0, 2, "Normal");
-            //juego.play(1, 0, "Normal");
+            juego.play(1, 0, "Normal");
             juego.play(1, 2, "Normal");
-            //juego.play(2, 0, "Normal");
-            //juego.play(2, 1, "Normal");
-            //juego.play(2, 2, "Normal");
+            juego.play(2, 0, "Normal");
+            juego.play(2, 1, "Normal");
+            juego.play(2, 2, "Normal");
             printBoard(juego.getTablero());
             System.out.println("-------------------------------------------");
-            //juego.play(1, 1, "Normal");
+            juego.play(1, 1, "Normal");
             printBoard(juego.getTablero());
             System.out.println("-------------------------------------------");
-            printBoard(juego.getBoardP1());
-            System.out.println("-------------------------------------------");
-            printBoard(juego.getBoardP2());
+            printBoard(juego.getBoardWithSymbols());
            
 
             // Verifica que las fichas alrededor de la casilla Mine hayan desaparecido

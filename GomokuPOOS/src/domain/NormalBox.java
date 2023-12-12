@@ -11,13 +11,7 @@ public class NormalBox extends Box{
 
 		
 	}
-	
-	 @Override
-	    public Box copyBox() {
-	        NormalBox copiedBox = new NormalBox();
-	        // Copiar atributos específicos de NormalBox si los hay
-	        return copiedBox;
-	    }
+
 	
 
 }

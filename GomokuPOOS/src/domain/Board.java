@@ -17,9 +17,8 @@ public class Board{
 		
 	}
 	
-	
-	public void play(int row, int column,String type, Color color) throws GomokuPOOSException{
-		boxes[row][column].play(type,color);
+	public void play(int row, int column,String type,char jugador) throws GomokuPOOSException{
+		boxes[row][column].play(type,jugador);
 		isTemporary();
 		removeTemporary();
 		if(boxes[row][column]instanceof Mine){
@@ -39,7 +38,7 @@ public class Board{
 	}
 	
 	
-	
+	//casillas
 	public char[][] getBoardWithSymbols() {
 	    char[][] symbols = new char[size][size];
 	    for (int i = 0; i < size; i++) {
@@ -59,7 +58,21 @@ public class Board{
         numeroCasillasEspeciales = (int) casillasEspeciales;
         return (int) casillasEspeciales;
     }
-	
+	//color fichas
+	public char[][] colorsficha() {
+	    char[][] colors = new char[size][size];
+	    for (int i = 0; i < size; i++) {
+	        for (int j = 0; j < size; j++) {
+	            if (boxes[i][j] != null && boxes[i][j].getFicha() != null) {
+	                colors[i][j] = boxes[i][j].colorficha();
+	            } else {
+	                colors[i][j] = '-'; 
+	            }
+	        }
+	    }
+	    return colors;
+	}
+	//fichas
 	public char[][] getBoard() {
 	    char[][] piedras = new char[size][size];
 	    for (int i = 0; i < size; i++) {
@@ -73,9 +86,6 @@ public class Board{
 	    }
 	    return piedras;
 	}
-	
-	
-	
 
 	public void isTemporary() {
 		for (int i = 0; i < size; i++) {
@@ -154,7 +164,7 @@ public class Board{
 	        //boxes[posicionX][posicionY].init(this);
 	    }
 	}
-	
+	/**
 	public boolean win() {
 		
         if (checkRows() || checkColumns() || checkDiagonals()) {
@@ -211,26 +221,8 @@ public class Board{
         }
         return true;
     }
-    
-    
-    public Board copyBoard() {
-        Board copiedBoard = new Board(size, 0.0); // 0.0 as the porcentaje for special tiles, you can adjust it accordingly
-        Box[][] copiedBoxes = new Box[size][size];
 
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                if (boxes[i][j] != null) {
-                    copiedBoxes[i][j] = boxes[i][j].copyBox(); // Assuming you have a copyBox method in the Box class
-                }
-            }
-        }
-
-        copiedBoard.boxes = copiedBoxes;
-        return copiedBoard;
-    }
-
-
-	
+	*/
 	private void initializeBoxes(double porcentaje) {
 		int casillasE = casillasEspeciales(porcentaje);
 		iniciarCasillasEspeciales(casillasE);
@@ -243,6 +235,7 @@ public class Board{
             		
             	}
             }
+		boxes[1][1] = new Teleport();
         }
 	}
 	

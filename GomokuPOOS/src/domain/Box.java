@@ -13,14 +13,14 @@ public abstract class Box {
 
 	}
 
-	public void play(String type,Color color) throws GomokuPOOSException {
+	public void play(String type,char jugador) throws GomokuPOOSException {
 		if(ficha == null) {
 			if(type.equals("Temporary")) {
-				ficha = new Temporary(color);
+				ficha = new Temporary(jugador);
 			}else if(type.equals("Normal")){
-				ficha = new NormalFicha(color);
+				ficha = new NormalFicha(jugador);
 			}else if(type.equals("Heavy")) {
-				ficha = new Heavy(color);
+				ficha = new Heavy(jugador);
 			}
 			//action();
 		}else {throw new GomokuPOOSException(GomokuPOOSException.FICHA_ON_BOX);
@@ -45,10 +45,6 @@ public abstract class Box {
 	public void setFicha(Ficha nuevaFicha) {
         this.ficha = nuevaFicha;
     }
-	
-
-
-	public abstract Box copyBox();
     
 	
 	 public void init(Board tablero) {
@@ -84,6 +80,9 @@ public abstract class Box {
 	
 	public char getType(){
 		return ficha.getType();
+	}
+	public char colorficha() {
+		return ficha.colorficha();
 	}
 	
 	public abstract void action(Board tablero);

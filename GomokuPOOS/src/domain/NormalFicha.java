@@ -5,7 +5,7 @@ import java.awt.Color;
 public class NormalFicha extends Ficha {
 	
 	
-	public NormalFicha(Color color) {
+	public NormalFicha(char color) {
 		super(color);
 		this.type = 'n';
 		

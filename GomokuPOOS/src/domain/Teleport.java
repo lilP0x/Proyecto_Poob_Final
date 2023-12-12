@@ -33,12 +33,4 @@ public class Teleport extends Box {
     	}
         return new Random().nextInt(tablero.getSize());
     }
-    
-   
-        @Override
-        public Box copyBox() {
-            Teleport copiedBox = new Teleport();
-            // Copiar atributos específicos de Teleport si los hay
-            return copiedBox;
-        }
 }

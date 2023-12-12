@@ -4,7 +4,7 @@ import java.awt.Color;
 
 public class Heavy extends Ficha {
 
-	public Heavy(Color color) {
+	public Heavy(char color) {
 		super(color);
 		this.type = 'h';
 	}

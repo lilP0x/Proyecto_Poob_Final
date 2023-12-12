@@ -7,7 +7,7 @@ public class Temporary extends Ficha{
 	private int cont;
 	
 	
-	public Temporary(Color color) {
+	public Temporary(char color) {
 		super(color);
 		state = true;
 		this.type = 't';
