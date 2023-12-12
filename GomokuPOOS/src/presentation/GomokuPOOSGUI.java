@@ -166,8 +166,11 @@ public class GomokuPOOSGUI extends JFrame {
         asignarFichas(rosaMap, "ROSADA");
         asignarFichas(blancoMap, "BLANCA");
         asignarFichas(grisMap, "GRIS");
-        casillasReference.put('m',new Color(255,105,97));
-        casillasReference.put('t',new Color(255,128,0));
+        casillasReference.put('n',new Color(250, 240, 230));
+        casillasReference.put('t',new Color(218, 178, 189));
+        casillasReference.put('g',new Color(239,184,16));
+        
+        
         
     }
     private void asignarFichas(HashMap<Character, ImageIcon> colores, String color1) {
@@ -856,9 +859,11 @@ private void fechasLimit(JPanel todo) {
     private void refresh() {
     	char[][] colores = juego.colorsficha();
     	char[][] tipo = juego.getTablero();
+    	char[][] casillas = juego.getBoardWithSymbols();
     	for (int i = 0; i < 10; i++) {
 	        for (int j = 0; j < 10; j++) {
 	        	JButton hola = tablero[i][j];
+	        	hola.setBackground(casillasReference.get(casillas[i][j]));
 	            if (colores[i][j] == '1') {
 	                hola.setIcon(jugador1Fichas.get(tipo[i][j]));
 	            } else {
