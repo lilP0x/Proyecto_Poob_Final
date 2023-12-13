@@ -288,7 +288,7 @@ public class GomokuPOOSGUI extends JFrame {
         			num = 20;
         		}
                 float especialCasillas = Float.parseFloat(porcentajeCasillasEspeciales.getText());
-                juego = new GomokuPOOS(nombreJugador1TEXTO,color1,nombreJugador2TEXTO,color2,"Normal",num,"Human","Human",especialCasillas);
+                juego =  GomokuPOOS.getInstance(nombreJugador1TEXTO,color1,nombreJugador2TEXTO,color2,"Normal",num,"Human","Human",especialCasillas);
                 getContentPane().add(pantallaTablero);
                 getContentPane().revalidate();
                 getContentPane().repaint();

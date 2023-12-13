@@ -10,7 +10,7 @@ public class GomokuPOOS {
 	private Board tablero;
 	private int turn;
 	private int size;
-	
+	private static GomokuPOOS instance;
 
 	public GomokuPOOS(String nameP1,String colorP1, String nameP2,String colorP2,String modoJuego,int size,String type1,String type2,double porcentaje){
 	tablero = new Board(size,porcentaje);	
@@ -18,7 +18,15 @@ public class GomokuPOOS {
 	turn = 1;
 	this.size = size;
 	}
-
+	
+	public static  GomokuPOOS getInstance(String nameP1,String colorP1, String nameP2,String colorP2,String modoJuego,int size,String type1,String type2,double porcentaje) {
+        if (instance == null) {
+            // Si la instancia aún no ha sido creada, se crea una nueva
+            instance = new GomokuPOOS(nameP1,colorP1,nameP2,colorP2,modoJuego,size,type1,type2,porcentaje);
+        }
+        // Se devuelve la instancia única
+        return instance;
+    }
 	
 	public void play(int row,int column,String type) throws GomokuPOOSException{
 		if(type == null) {throw new GomokuPOOSException(GomokuPOOSException.NOT_SELECTED_FICHA);}
