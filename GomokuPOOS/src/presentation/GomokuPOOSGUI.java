@@ -142,7 +142,7 @@ public class GomokuPOOSGUI extends JFrame {
         paquetefichasyCasillas();
     	prepareElements();
         prepareActions();
-        juego = new GomokuPOOS(nombreJugador1TEXTO,"fg",nombreJugador2TEXTO,"fg","Normal",10,"Human","Human",0.3);
+       
      
         
     }
@@ -152,9 +152,7 @@ public class GomokuPOOSGUI extends JFrame {
         GomokuPOOSGUI gomoku = new GomokuPOOSGUI();
         gomoku.setVisible(true);
     }
-    private void paquetefichasyCasillas() {
-    	//realiza el insert de los tipos de casillas
-    	
+    private void paquetefichasyCasillas() {  	
         negroMap = new HashMap<>();
         moradoMap = new HashMap<>();
         rosaMap = new HashMap<>();
@@ -282,13 +280,20 @@ public class GomokuPOOSGUI extends JFrame {
                 prepareFichasJugador2(color2);
                 fichasjugadores(color1);
                 fichasjugadores(color2);
+                int num = 15;
+        		String tamaño = (String) dimensionesTablero.getSelectedItem();
+        		if(tamaño.equals("10 x 10")) {
+        			num = 10;
+        		}else if(tamaño.equals("20 x 20")) {
+        			num = 20;
+        		}
+                float especialCasillas = Float.parseFloat(porcentajeCasillasEspeciales.getText());
+                juego = new GomokuPOOS(nombreJugador1TEXTO,color1,nombreJugador2TEXTO,color2,"Normal",num,"Human","Human",especialCasillas);
                 getContentPane().add(pantallaTablero);
                 getContentPane().revalidate();
                 getContentPane().repaint();
                 prepareActionFichasJugador2();
                 prepareActionFichasJugador1();
-                
-                
             }
         };
         inicioJuegoPvsP.addActionListener(oyenteGuardarDetallesPartida);
@@ -597,7 +602,6 @@ public class GomokuPOOSGUI extends JFrame {
     	nombreJugador1.setBounds(getWidth()/20 +  getHeight() / 16,0, getWidth()/3 - getWidth()/6 , getHeight() / 16);
     	auxiliar1.add(nombreJugador1);
     	player1.add(auxiliar1,BorderLayout.CENTER);
-	    
     	JPanel auxiliar2 = new JPanel();
 		auxiliar2.setBounds(getWidth()/20, getHeight() / 5+( getHeight() / 45), getWidth()-(getWidth()/20)-(getWidth()/20), getHeight() / 3);
 		auxiliar2.setBackground(new Color(254,180,203,0));
@@ -612,9 +616,8 @@ public class GomokuPOOSGUI extends JFrame {
 	    colorJugador1.setPreferredSize(new Dimension(getWidth()/2 - getWidth()/6 , getHeight() / 16));
 	    auxiliar2.add(colorJugador1);
 	    player1.add(auxiliar2,BorderLayout.SOUTH);
-        
-    	
     }
+    
     private void player2() {
     	JPanel player2 = new JPanel();
     	player2.setBounds(getWidth()/20 + getWidth()/2-(getWidth()/20)-(getWidth()/20)+ getWidth()/20+ getWidth()/30- (getWidth()/53),getHeight() / 5+( getHeight() / 45)+getHeight() / 4+getHeight() / 27 , getWidth()/2-(getWidth()/20)-(getWidth()/20)+(getWidth()/30), getHeight() / 4);
@@ -808,10 +811,17 @@ private void fechasLimit(JPanel todo) {
 	}
 	
 	private void tablero() {
-	    tablero = new JButton[10][10];
-	    int m = 10;
-	    for (int i = 0; i < m; i++) {
-	        for (int j = 0; j < m; j++) {
+		int num = 15;
+		String tamaño = (String) dimensionesTablero.getSelectedItem();
+		if(tamaño.equals("10 x 10")) {
+			num = 10;
+		}else if(tamaño.equals("20 x 20")) {
+			num = 20;
+		}
+	    tablero = new JButton[num][num];
+	    
+	    for (int i = 0; i <num; i++) {
+	        for (int j = 0; j < num; j++) {
 	            final int fila = i;  
 	            final int columna = j;  
 	            tablero[i][j] = new JButton();
@@ -829,8 +839,6 @@ private void fechasLimit(JPanel todo) {
 	                        hola.setIcon(fichaSeleccionadaJugar);
 	                        fichaSeleccionadaJugar = null;
 	                        tipoFichaJugado = null;
-
-	                        // Usar un temporizador en lugar de Thread.sleep()
 	                        Timer timer = new Timer(500, new ActionListener() {
 	                            @Override
 	                            public void actionPerformed(ActionEvent arg0) {
@@ -840,7 +848,7 @@ private void fechasLimit(JPanel todo) {
 	                            }
 	                        });
 	                        
-	                        timer.setRepeats(false); // Hacer que el temporizador se ejecute solo una vez
+	                        timer.setRepeats(false); 
 	                        timer.start();
 	                        
 	                    } catch (GomokuPOOSException e1) {

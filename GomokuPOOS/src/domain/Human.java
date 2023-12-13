@@ -1,6 +1,6 @@
 package domain;
 
-import java.awt.Color;
+
 import java.lang.reflect.Constructor;
 
 public class Human extends Player{
@@ -11,10 +11,10 @@ public class Human extends Player{
 		
 	}
 	
-
-	@Override
 	public void play(int row, int column, String type,Board tablero,char jugador) throws GomokuPOOSException{
 		tablero.play(row,column,type,jugador );
+		casillas.add(tablero.getBox(row,column));
+		
 	}
 	
  }

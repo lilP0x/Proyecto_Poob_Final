@@ -10,7 +10,7 @@ public abstract class Machine extends Player {
 	}
 
 	public void play(int row, int column, String type,Board tablero,char jugador) throws GomokuPOOSException {
-		// TODO Auto-generated method stub
+
 		
 	}
 

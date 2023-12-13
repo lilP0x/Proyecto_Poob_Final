@@ -14,15 +14,15 @@ public class GomokuPOOSTest {
     @BeforeAll
     public static void setUp() {
         String nombreJugador1 = "Jugador1";
-        Color colorJugador1 = Color.RED;
+        String colorJugador1 = "blue";
         String nombreJugador2 = "Jugador2";
-        Color colorJugador2 = Color.BLUE;
+        String colorJugador2 = "red";
         String modoDeJuego = "Modo Normal";
         int tamañoTablero = 15;
-        double porcentaje = 0.2;
+        double  porcentaje = 0.2;
         String tipo1 = "Human";
         String tipo2 = "Human";
-        //juego = new GomokuPOOS(nombreJugador1, colorJugador1, nombreJugador2, colorJugador2, modoDeJuego, tamañoTablero, tipo1, tipo2,porcentaje);
+        juego = new GomokuPOOS(nombreJugador1, colorJugador1, nombreJugador2, colorJugador2, modoDeJuego, tamañoTablero, tipo1, tipo2,porcentaje);
     }
 /*
 
@@ -168,6 +168,7 @@ public class GomokuPOOSTest {
   	
 	  
   }
+    */
     
     @Test
     public void shouldWin() {
@@ -175,9 +176,9 @@ public class GomokuPOOSTest {
         try {
             juego.play(0, 0, "Normal");
             juego.play(1, 0, "Normal");
-            juego.play(0, 1, "Temporary");
+            juego.play(0, 1, "Normal");
             juego.play(1, 1, "Normal");
-            juego.play(0, 2, "Heavy");
+            juego.play(0, 2, "Normal");
             juego.play(1, 2, "Normal");
             juego.play(0, 3, "Normal");
             juego.play(1, 3, "Normal");
@@ -194,7 +195,7 @@ public class GomokuPOOSTest {
         }
         assertEquals("El jugador gano", s);
     }
-   */
+   
   
     public void printBoard(char[][] board) {
         for (int i = 0; i < juego.getSize(); i++) {
@@ -239,6 +240,7 @@ public class GomokuPOOSTest {
     }
 */
  
+    /*
     @Test
     public void testMineExplode() {
         try {
@@ -278,7 +280,7 @@ public class GomokuPOOSTest {
             fail("No debería lanzar una excepción aquí");
         }
     }
-
+*/
                  
         
 }

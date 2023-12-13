@@ -8,7 +8,7 @@ import java.util.*;
 public abstract class Player{
 	protected String name;
 	protected String color;
-	protected ArrayList<Ficha> fichas = new ArrayList<>();  
+	protected ArrayList<Box> casillas = new ArrayList<>();  
 
 	public Player(String name,String color){
 		this.name = name;
@@ -18,6 +18,7 @@ public abstract class Player{
 	public abstract void play(int row,int column,String type,Board tablero,char jugador) throws GomokuPOOSException;
 	
 	
+
 	public String getName() {
 		return name;
 	}

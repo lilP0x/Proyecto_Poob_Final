@@ -22,26 +22,27 @@ public class GomokuPOOS {
 	
 	public void play(int row,int column,String type) throws GomokuPOOSException{
 		if(type == null) {throw new GomokuPOOSException(GomokuPOOSException.NOT_SELECTED_FICHA);}
-		//if(win() == true) {throw new GomokuPOOSException(GomokuPOOSException.PLAYER_WIN);}
-			if(turn % 2 == 0) {
-				player2.play(row,column,type,tablero,'0');
-				printBoard(tablero.colorsficha());
+		if(win() == true) {throw new GomokuPOOSException(GomokuPOOSException.PLAYER_WIN);}
+		tablero.verificarTemporales();
+		if(turn % 2 == 0) {
+			player2.play(row,column,type,tablero,'0');
 			
-			}else {
-				player1.play(row,column,type, tablero,'1');
-				printBoard(tablero.colorsficha());
+			printBoard(tablero.colorsficha());
+			
+		}else {
+			player1.play(row,column,type, tablero,'1');
+			
+			printBoard(tablero.colorsficha());
 
-			}
+		}
 			turn++;
 
 	}
 	
-	private void isTemporary() {
-		tablero.isTemporary();
-	}
 	
 	
-	/**
+	
+	
 	public boolean win() {
         if (tablero.win()) {
             return true;
@@ -50,7 +51,7 @@ public class GomokuPOOS {
     }
 	
 	
-	*/
+
 	
 	private void addPlayers(String nameP1,String colorP1,String nameP2,String colorP2,String type1, String type2, Board tablero){
            

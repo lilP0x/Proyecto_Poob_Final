@@ -13,7 +13,11 @@ public class Temporary extends Ficha{
 		this.type = 't';
 		cont = 0;
 	}
-
+	
+	public int sum() {
+		cont += 1;
+		return cont;
+	}
 	
 	public boolean getState() {
 		return state;
@@ -23,8 +27,9 @@ public class Temporary extends Ficha{
 		state = false;
 	}
 	
-	public void changeCont() {
-		cont++;
+	public int changeCont() {
+		cont += 1;
+		return cont;
 	}
 	
 	

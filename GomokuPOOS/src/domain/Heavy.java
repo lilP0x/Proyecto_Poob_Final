@@ -9,4 +9,5 @@ public class Heavy extends Ficha {
 		this.type = 'h';
 	}
 	
+	
 }

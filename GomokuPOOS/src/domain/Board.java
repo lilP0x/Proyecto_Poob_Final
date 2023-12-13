@@ -1,6 +1,7 @@
 package domain;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -17,10 +18,74 @@ public class Board{
 		
 	}
 	
+	
+	public boolean win() {
+        char[][] stones = colorsficha();
+
+        // Verifica filas y columnas
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j <= size - 5; j++) {
+                // Verifica filas
+                if (stones[i][j] == '1' && stones[i][j + 1] == '1' && stones[i][j + 2] == '1' &&
+                    stones[i][j + 3] == '1' && stones[i][j + 4] == '1') {
+                    return true;  // Jugador 1 ha ganado
+                }
+
+                // Verifica columnas
+                if (stones[j][i] == '1' && stones[j + 1][i] == '1' && stones[j + 2][i] == '1' &&
+                    stones[j + 3][i] == '1' && stones[j + 4][i] == '1') {
+                    return true;  // Jugador 1 ha ganado
+                }
+
+                // Repite el proceso para el Jugador 2
+                if (stones[i][j] == '0' && stones[i][j + 1] == '0' && stones[i][j + 2] == '0' &&
+                    stones[i][j + 3] == '0' && stones[i][j + 4] == '0') {
+                    return true;  // Jugador 2 ha ganado
+                }
+
+                if (stones[j][i] == '0' && stones[j + 1][i] == '0' && stones[j + 2][i] == '0' &&
+                    stones[j + 3][i] == '0' && stones[j + 4][i] == '0') {
+                    return true;  // Jugador 2 ha ganado
+                }
+            }
+        }
+
+        // Verifica diagonales
+        for (int i = 0; i <= size - 5; i++) {
+            for (int j = 0; j <= size - 5; j++) {
+                // Diagonal de arriba a abajo
+                if (stones[i][j] == '1' && stones[i + 1][j + 1] == '1' && stones[i + 2][j + 2] == '1' &&
+                    stones[i + 3][j + 3] == '1' && stones[i + 4][j + 4] == '1') {
+                    return true;  // Jugador 1 ha ganado
+                }
+
+                if (stones[i][j] == '0' && stones[i + 1][j + 1] == '0' && stones[i + 2][j + 2] == '0' &&
+                    stones[i + 3][j + 3] == '0' && stones[i + 4][j + 4] == '0') {
+                    return true;  // Jugador 2 ha ganado
+                }
+
+                // Diagonal de abajo a arriba
+                if (stones[i + 4][j] == '1' && stones[i + 3][j + 1] == '1' && stones[i + 2][j + 2] == '1' &&
+                    stones[i + 1][j + 3] == '1' && stones[i][j + 4] == '1') {
+                    return true;  // Jugador 1 ha ganado
+                }
+
+                if (stones[i + 4][j] == '0' && stones[i + 3][j + 1] == '0' && stones[i + 2][j + 2] == '0' &&
+                    stones[i + 1][j + 3] == '0' && stones[i][j + 4] == '0') {
+                    return true;  // Jugador 2 ha ganado
+                }
+            }
+        }
+
+        return false;  // No hay ganador
+    }
+    
+	
 	public void play(int row, int column,String type,char jugador) throws GomokuPOOSException{
 		boxes[row][column].play(type,jugador);
-		isTemporary();
-		removeTemporary();
+		if (type.equals("Heavy")){
+			heavyEffect(row,column);
+		}
 		if(boxes[row][column]instanceof Mine){
 			boxes[row][column].action(this);
 		}else if(boxes[row][column] instanceof Teleport){
@@ -31,6 +96,42 @@ public class Board{
 			boxes[row][column].action(this);
 		}
 		
+	}
+	
+	public void heavyEffect(int i,int j){
+		
+		if (i-1 >= 0) {
+			try{
+			boxes[i-1][j].play("Normal",'2');
+			boxes[i-1][j].setAfectada('T');
+			}catch  (GomokuPOOSException e1){
+			}
+			if (j+1 < size) {
+				try{
+				boxes[i-1][j+1].play("Normal",'2');
+				boxes[i-1][j+1].setAfectada('T');
+				}catch  (GomokuPOOSException e1) {
+				}
+			}
+		}
+		if (j+1 < size) {
+			try{
+			boxes[i][j+1].play("Normal",'2');
+			boxes[i][j+1].setAfectada('T');
+			}catch  (GomokuPOOSException e1) {
+			}
+		}
+		
+	}
+	
+	
+	public void verificarTemporales(){
+		for (int i = 0; i< size; i++) {
+			for (int j = 0; j< size; j++) {
+				boxes[i][j].verificarTemporales();
+				
+			}
+		}
 	}
 	
 	public Box[][] getTablero(){
@@ -77,7 +178,7 @@ public class Board{
 	    char[][] piedras = new char[size][size];
 	    for (int i = 0; i < size; i++) {
 	        for (int j = 0; j < size; j++) {
-	            if (boxes[i][j] != null && boxes[i][j].getFicha() != null) {
+	            if (boxes[i][j] != null  && boxes[i][j].getFicha() != null) {
 	                piedras[i][j] = boxes[i][j].getType();
 	            } else {
 	                piedras[i][j] = '-'; 
@@ -86,29 +187,6 @@ public class Board{
 	    }
 	    return piedras;
 	}
-
-	public void isTemporary() {
-		for (int i = 0; i < size; i++) {
-	        for (int j = 0; j < size; j++) {
-	        	if(boxes[i][j].getFicha() instanceof Temporary) {
-	            	boxes[i][j].changeCont();
-	            	
-	        		}
-	            } 
-			}
-		}
-	
-	public void removeTemporary() {
-		for (int i = 0; i < size; i++) {
-	        for (int j = 0; j < size; j++) {
-	        	if(boxes[i][j].getFicha() instanceof Temporary) {
-	            		boxes[i][j].removeTemporary();
-	        		}
-	            } 
-	        }
-		}
-		
-	
 	
 	public int getSize () {
 		return size;
@@ -164,65 +242,7 @@ public class Board{
 	        //boxes[posicionX][posicionY].init(this);
 	    }
 	}
-	/**
-	public boolean win() {
-		
-        if (checkRows() || checkColumns() || checkDiagonals()) {
-            return true;
-        }
-        return false;
-    }
 
-    private boolean checkRows() {
-        for (int i = 0; i < boxes.length; i++) {
-            for (int j = 0; j <= boxes.length - 5; j++) {
-                if (checkSequence(boxes[i][j], boxes[i][j + 1], boxes[i][j + 2], boxes[i][j + 3], boxes[i][j + 4])){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean checkColumns() {
-        for (int i = 0; i <= boxes.length - 5; i++) {
-            for (int j = 0; j < boxes.length; j++) {
-                if (checkSequence(boxes[i][j], boxes[i + 1][j], boxes[i + 2][j], boxes[i + 3][j], boxes[i + 4][j])) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean checkDiagonals() {
-        for (int i = 0; i <= boxes.length - 5; i++) {
-            for (int j = 0; j <= boxes.length - 5; j++) {
-                if (checkSequence(boxes[i][j], boxes[i + 1][j + 1], boxes[i + 2][j + 2], boxes[i + 3][j + 3], boxes[i + 4][j + 4])) {
-                    return true;
-                }
-
-                if (checkSequence(boxes[i][j + 4], boxes[i + 1][j + 3], boxes[i + 2][j + 2], boxes[i + 3][j + 1], boxes[i + 4][j])) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    
-    private boolean checkSequence(Box... boxes) {
-        for (int i = 0; i < boxes.length - 1; i++) {
-            if (boxes[i].getFicha() == null || boxes[i + 1].getFicha() == null || 
-                (boxes[i].getFicha().color == null || boxes[i + 1].getFicha().color == null) ||
-                !boxes[i].getFicha().color.equals(boxes[i + 1].getFicha().color)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-	*/
 	private void initializeBoxes(double porcentaje) {
 		int casillasE = casillasEspeciales(porcentaje);
 		iniciarCasillasEspeciales(casillasE);
